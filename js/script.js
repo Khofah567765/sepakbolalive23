@@ -1,18 +1,15 @@
-<script>
-  function switchCategory(categoryId) {
-    // Sembunyikan semua kategori
-    document.querySelectorAll('.category').forEach(cat => cat.classList.remove('active'));
+function changeChannel(url) {
+            document.getElementById('player').src = url;
+        }
 
-    // Tampilkan kategori yang dipilih
-    const selected = document.getElementById(categoryId);
-    selected.classList.add('active');
+        function switchCategory(category) {
+            // Hide all categories
+            const categories = document.querySelectorAll('.category');
+            categories.forEach(cat => cat.classList.remove('active'));
+            
+            // Show the selected category
+            document.getElementById(category).classList.add('active');
 
-    // Ambil dan tampilkan judul dari <h2> tersembunyi dalam kategori tersebut
-    const newTitle = selected.querySelector('h2')?.innerText || '';
-    document.getElementById('current-title').innerText = newTitle;
-  }
-
-  function changeChannel(src) {
-    document.getElementById('player').src = src;
-  }
-</script>
+            // Change the title
+            document.getElementById('current-title').innerText = document.getElementById(category).querySelector('h2').innerText;
+        }
