@@ -1,30 +1,306 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Profil Saya</title>
-  <style>
-    .profil {
-      text-align: center;
-      margin-top: 50px;
-    }
-    .profil img {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      border: 3px solid #333;
-    }
-    .profil h2 {
-      margin-top: 15px;
-      font-family: Arial, sans-serif;
-      color: #444;
-    }
-  </style>
-  <link rel="icon" href="images (14).png" type="image/png
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV Channel Switcher</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-top: 20px;
+           text-align : center;
+      }
+        h2 {
+          text-align : center;
+        }
+
+        iframe {
+            width: 100vw;
+            height: 56.25vw; /* 16:9 aspect ratio */
+            max-height: 100vh;
+            border: none;
+            background: #000;
+        }
+
+        .category {
+            display: none; /* Initially hide all categories */
+            margin: 20px;
+            text-align: center;
+        }
+
+        .active {
+            display: block; /* Show the active category */
+        }
+
+        .server-button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #000;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .server-button:hover {
+            background-color: red;
+        }
+
+        .text-box {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+      
+      .text-box2 {
+            background-color: #0000; /* White background for text box */
+            padding: 10px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffff;
+            text-align : center;
+              }
+
+        .category-button {
+    adding: 1px 24px;
+    background-color: #000;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #fff;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.3s;
+    text-align: center;
+  }
+
+  .category-button:hover {
+    background-color: #000;
+  }
+      .league-nav {
+  margin-top: 0px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+      
+      .nav-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0px 16px;
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.nav-button:hover {
+  background-color: transparent;
+  transform: scale(1.05);
+}
+
+.league-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+
+}
+      
+      .fallback {
+      color :#fff;
+      text-align : center;
+       }
+    
+    
+  .iptv-button {
+    padding: 12px 24px;
+    background-color: #000;
+    border: 1px solid #fff;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #fff;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.3s;
+    text-align: center;
+  }
+
+  .iptv-button:hover {
+    background-color: #444;
+  }
+      
+    </style>
 </head>
 <body>
-  <div class="profil">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdJnrPQuPPH3-MMDT0qzUWTYhqisMfHB-_EM2QUKFUO-n3ahOo035km4Nk&s=10cid=32d58327-db0e-57f5-a28f-59cfe992894c&skoid=3f3a9132-9530-48ef-96b7-fee5a811733f&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-06T03%3A13%3A35Z&ske=2025-05-07T03%3A13%3A35Z&sks=b&skv=2024-08-04&sig=69vN4PSz1h4lAfTdZU/bEW06yA/gGaRB9rbal9j0C08%3D" alt="Foto Profil">
-    <h2>Nama Kamu</h2>
-  </div>
-</body>
-</html>
+
+    <h1 id="current-title">LIGA CHAMPIONS</h1>
+    
+    <iframe id="player" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEOTn8cW-8iI6TA7-So1oRKc8w8MqcNOFPiA&s" allowfullscreen></iframe>
+
+
+    <div id="champions" class="category active">
+        <h2>LIGA CHAMPIONS</h2>
+        <button class="server-button" onclick="changeChannel('https://dg384vhd9eh3k28wyeh.blogspot.com/p/fullscreen-hls-player-html-body-margin.html')">480p</button>
+        <button class="server-button" onclick="changeChannel('https://dg384vhd9eh3k28wyeh.blogspot.com/p/fixed-zoom-hls-player-html-body-margin_30.html')">720p</button>
+        <button class="server-button" onclick="changeChannel('https://dg384vhd9eh3k28wyeh.blogspot.com/p/fixed-zoom-hls-player-html-body-margin.html')">1080p</button>
+        <div class="text-box">REKOMENDASI LIVE PALING LANCAR DAN STABIL DOWNLOAD APLIKASI NSPLAYER</div>
+  <div class="fallback">SILAHKAN KLIK<a href="https://play.google.com/store/apps/details?id=com.genuine.leone" > DISINI </a>UNTUK MENDOWNLOAD DI PLAY STORE [12MB]. SETELAH DOWNLOAD SELESAI,SILAHKAN PILIH SERVER DI BAWAH INI.</div>
+  
+  
+    
+<div class="text-box2">KLIK UNTUK PILIH SERVER :</div>
+    
+     
+     <button class="iptv-button" onclick="location.href='intent://top1-cdnnew.newkso.ru/top1-cdn/W0svhc8oj7/mono.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">MAIN SERVER
+</button>
+
+<button class="iptv-button" onclick="location.href='intent://top1-cdnnew.newkso.ru/top1-cdn/vTwenKA7UX/mono.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">480p
+</button>    
+    
+<button class="iptv-button" onclick="location.href='intent://stream.sainaertebat.com/hls2/bein1.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">720p
+</button>   
+    
+<button class="iptv-button" onclick="location.href='intent://wo.cma.footballii.ir/hls2/b1_src.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">
+  1080p
+</button>  
+      
+    
+<button class="iptv-button" onclick="location.href='intent://tataplay.slivcdn.com/hls/live/2020434/TEN2HD/master.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">LANCAR
+</button>
+      </div>
+
+    <div id="spain" class="category">
+        <h2>LIGA SPANYOL</h2>
+        <button class="server-button" onclick="changeChannel('https://dg384vhd9eh3k28wyeh.blogspot.com/p/ziggo-s1.html')">480p</button>
+        <button class="server-button" onclick="changeChannel('https://example.com/spain/720p.m3u8')">720p</button>
+        <button class="server-button" onclick="changeChannel('https://example.com/spain/1080p.m3u8')">1080p</button>
+        <div class="text-box">Pilih kualitas yang sesuai untuk streaming Liga Spanyol dengan lancar.</div>
+<div class="text-box">REKOMENDASI LIVE PALING LANCAR DAN STABIL DOWNLOAD APLIKASI NSPLAYER</div>
+  <div class="fallback">SILAHKAN KLIK<a href="https://play.google.com/store/apps/details?id=com.genuine.leone" > DISINI </a>UNTUK MENDOWNLOAD DI PLAY STORE [12MB]. SETELAH DOWNLOAD SELESAI,SILAHKAN PILIH SERVER DI BAWAH INI.</div>
+  
+  
+    
+<div class="text-box2">KLIK UNTUK PILIH SERVER :</div>
+    
+     
+     <button class="iptv-button" onclick="location.href='intent://aa.gggsjmjh756hgffreewguiijnbvcfg7.store:8181/bein3/index.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">MAIN SERVER
+</button>
+
+<button class="iptv-button" onclick="location.href='intent://aa.gggsjmjh756hgffreewguiijnbvcfg7.store:8181/bein3/index.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">480p
+</button>    
+    
+<button class="iptv-button" onclick="location.href='intent://aa.gggsjmjh756hgffreewguiijnbvcfg7.store:8181/bein3/tracks-v1a1/mono.ts.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">720p
+</button>   
+    
+<button class="iptv-button" onclick="location.href='intent://wo.cma.footballii.ir/hls2/b1_src.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">
+  1080p
+</button>  
+      
+    
+<button class="iptv-button" onclick="location.href='intent://tataplay.slivcdn.com/hls/live/2020434/TEN2HD/master.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">LANCAR
+</button>
+    </div>
+    </div>
+
+    <div id="england" class="category">
+        <h2>LIGA INGGRIS</h2>
+        <button class="server-button" onclick="changeChannel('https://dg384vhd9eh3k28wyeh.blogspot.com/p/fullscreen-hls-player-html-body-margin.html')">480p</button>
+        <button class="server-button" onclick="changeChannel('https://dg384vhd9eh3k28wyeh.blogspot.com/p/fixed-zoom-hls-player-html-body-margin_30.html')">720p</button>
+        <button class="server-button" onclick="changeChannel('https://dg384vhd9eh3k28wyeh.blogspot.com/p/fixed-zoom-hls-player-html-body-margin.html')">1080p</button>
+        <div class="text-box">REKOMENDASI LIVE PALING LANCAR DAN STABIL DOWNLOAD APLIKASI NSPLAYER</div>
+  <div class="fallback">SILAHKAN KLIK<a href="https://play.google.com/store/apps/details?id=com.genuine.leone" > DISINI </a>UNTUK MENDOWNLOAD DI PLAY STORE [12MB]. SETELAH DOWNLOAD SELESAI,SILAHKAN PILIH SERVER DI BAWAH INI.</div>
+  
+  
+    
+<div class="text-box2">KLIK UNTUK PILIH SERVER :</div>
+    
+     
+     <button class="iptv-button" onclick="location.href='intent://top1-cdnnew.newkso.ru/top1-cdn/W0svhc8oj7/mono.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">MAIN SERVER
+</button>
+
+<button class="iptv-button" onclick="location.href='intent://top1-cdnnew.newkso.ru/top1-cdn/vTwenKA7UX/mono.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">480p
+</button>    
+    
+<button class="iptv-button" onclick="location.href='intent://stream.sainaertebat.com/hls2/bein1.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">720p
+</button>   
+    
+<button class="iptv-button" onclick="location.href='intent://wo.cma.footballii.ir/hls2/b1_src.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">
+  1080p
+</button>  
+      
+    
+<button class="iptv-button" onclick="location.href='intent://tataplay.slivcdn.com/hls/live/2020434/TEN2HD/master.m3u8#Intent;scheme=https;package=com.genuine.leone;end'">LANCAR
+</button>
+    </div>
+          
+    <div id="arab" class="category">
+        <h2>LIGA ARAB</h2>
+        <button class="server-button" onclick="changeChannel('https://example.com/england/480p.m3u8')">480p</button>
+        <button class="server-button" onclick="changeChannel('https://example.com/england/720p.m3u8')">720p</button>
+        <button class="server-button" onclick="changeChannel('https://example.com/england/1080p.m3u8')">1080p</button>
+        <div class="text-box">Pilih kualitas yang sesuai untuk menikmati Liga Inggris.</div>
+    </div>
+
+<div>
+  
+ <div class="text-box2">SIARAN LAINNYA :</div>
+  
+      <div class="league-nav">
+        <button class="category-button" onclick="switchCategory('champions')">
+     <img src="https://i.ibb.co.com/y9nFYN6/20250503-100151.jpg" alt="champions" class="league-icon">
+    </button>
+        
+      <div class="league-nav">
+      <button class="category-button" onclick="switchCategory('arab')">
+    <img src="https://i.ibb.co.com/0VfwwqFm/20250503-020952.jpg" alt="arab" class="league-icon">
+    </button>
+        
+        <div class="league-nav">
+        <button class="category-button" onclick="switchCategory('spain')">
+    <img src="https://i.ibb.co.com/1GTRvFkv/20250503-005630.jpg" alt="La Liga" class="league-icon">
+    </button>
+          
+        <div class="league-nav">
+        <button class="category-button" onclick="switchCategory('england')">
+    <img src="https://i.ibb.co.com/jk8G05yd/20250503-005516.jpg" alt="england" class="league-icon">
+    </button>
+          
+     
+        <!-- Add more categories as needed -->
+    </div>  
+  
+    <script>
+        function changeChannel(url) {
+            document.getElementById('player').src = url;
+        }
+
+        function switchCategory(category) {
+            // Hide all categories
+            const categories = document.querySelectorAll('.category');
+            categories.forEach(cat => cat.classList.remove('active'));
+            
+            // Show the selected category
+            document.getElementById(category).classList.add('active');
+
+            // Change the title
+            document.getElementById('current-title').innerText = document.getElementById(category).querySelector('h2').innerText;
+        }
+    </script>
