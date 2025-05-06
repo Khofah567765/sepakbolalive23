@@ -47,7 +47,7 @@
         }
 
         .server-button:hover {
-            background-color: #f4f4f4;
+            background-color: #8888;
         }
 
         .text-box {
@@ -78,9 +78,6 @@
     text-align: center;
   }
 
-  .category-button:hover {
-    background-color: #f0f0f0;
-  }
       .league-nav {
   margin-top: 0px;
   display: flex;
@@ -90,7 +87,7 @@
 }
 
 .league-nav:hover {
-    background-color: #f0f0f0;
+    background-color: #8888;
   }
       
       .nav-button {
@@ -119,9 +116,6 @@
   object-fit: contain;
 }
 
-.league-nav:hover {
-    background-color: #f0f0f0;
-  }
       
       .fallback {
       color :#fff;
