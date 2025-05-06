@@ -79,7 +79,7 @@
   }
 
   .category-button:hover {
-    background-color: red;
+    background-color: #f0f0f0;
   }
       .league-nav {
   margin-top: 0px;
@@ -90,7 +90,7 @@
 }
 
 .league-nav:hover {
-    background-color: red;
+    background-color: #f0f0f0;
   }
       
       .nav-button {
@@ -120,7 +120,7 @@
 }
 
 .league-nav:hover {
-    background-color: red;
+    background-color: #f0f0f0;
   }
       
       .fallback {
