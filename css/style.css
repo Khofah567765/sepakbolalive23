@@ -47,7 +47,7 @@
         }
 
         .server-button:hover {
-            background-color: #yellow;
+            background-color: #8888;
         }
 
         .text-box {
@@ -106,7 +106,7 @@ background-color: red;
 }
 
 .nav-button:hover {
-  background-color: green;
+  background-color: transparent;
   transform: scale(1.05);
 }
 
@@ -114,6 +114,9 @@ background-color: red;
   width: 50px;
   height: 50px;
   object-fit: contain;
+}
+.league-icon:hover {
+    background-color: red;
 }
 
       
@@ -138,5 +141,5 @@ background-color: red;
   }
 
   .iptv-button:hover {
-    background-color: blue;
+    background-color: #8888;
   }
