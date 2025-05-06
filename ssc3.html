@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="name" content="s5d8f76sd8f7s6d8f76s8d7f8s">
+    
+    
+    <!-- Memuat library JW Player -->
+    <script src="//ssl.p.jwpcdn.com/player/v/8.26.0/jwplayer.js"></script>
+    <script src="//ssl.p.jwpcdn.com/player/v/8.21.0/jwplayer.js"></script>
+
+    <script>
+        // Menetapkan kunci lisensi JW Player
+        jwplayer.key = 'XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo';
+    </script>
+    <style>
+        /* Mengatur tampilan halaman agar fullscreen */
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Poppins, sans-serif;
+            background: #000;
+            overflow: hidden;
+        }
+
+        /* Container video agar fullscreen */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 50px); /* Menyediakan ruang untuk teks */
+            background: transparent;
+            display: flex;
+            align-items: top;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        /* Player harus mengambil seluruh area */
+        #player {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Gaya teks berjalan */
+        .marquee {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 0;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .marquee span {
+            display: inline-block;
+            padding-left: 100%; /* Space before the text */
+            animation: marquee 20s linear infinite; /* Adjust the duration for speed */
+        }
+
+        @keyframes marquee {
+            from {
+                transform: translate(0%);
+            }
+            to {
+                transform: translate(-100%);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Kontainer untuk player -->
+    <div class="video-container">
+        <div id="player"></div>
+    </div>
+
+    <!-- Teks berjalan di bawah player -->
+    
+
+    <script>
+        // Inisialisasi JW Player
+        var playerInstance = jwplayer("player");
+
+        playerInstance.setup({
+            playlist: [{
+                "title": "",
+                "sources": [{
+                    "default": false,
+                    "type": "dash",
+                    "file": "https://ssc-3-enc.edgenextcdn.net/out/v1/42e86125555242aaa2a12056832e7814/index.mpd",
+                    "drm": {
+                        "clearkey": {
+                            "keyId": "7de5dd08ad8041d586c2f16ccc9490a1",
+                            "key": "5e1503f3398b34f5099933fedab847ef"
+                        }
+                    },
+                    "label": "0"
+                }]
+            }],
+            width: "100%",
+            height: "100%",
+            aspectratio: "16:9",
+            autostart: true,
+            cast: {},
+        });
+    </script>
+
+</body>
+</html>
