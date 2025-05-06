@@ -81,10 +81,11 @@
 background-color: red;
 }
 
-      .league-nav {
+
+.league-nav {
   margin-top: 0px;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -116,13 +117,13 @@ background-color: red;
   object-fit: contain;
 }
 .league-icon:hover {
-    background-color: red;
+    background-color: #8888;
 }
 
       
       .fallback {
-      color :#fff;
-      text-align : center;
+      color: #fff;
+      text-align: center;
        }
     
     
