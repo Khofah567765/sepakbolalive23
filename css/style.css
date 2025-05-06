@@ -86,9 +86,6 @@
   justify-content: center;
 }
 
-.league-nav:hover {
-    background-color: #8888;
-  }
       
       .nav-button {
   display: flex;
@@ -106,7 +103,7 @@
 }
 
 .nav-button:hover {
-  background-color: transparent;
+  background-color: #8888;
   transform: scale(1.05);
 }
 
