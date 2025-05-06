@@ -47,7 +47,7 @@
         }
 
         .server-button:hover {
-            background-color: red;
+            background-color: #f4f4f4;
         }
 
         .text-box {
@@ -117,8 +117,11 @@
   width: 50px;
   height: 50px;
   object-fit: contain;
-
 }
+
+.league-nav:hover {
+    background-color: red;
+  }
       
       .fallback {
       color :#fff;
