@@ -79,7 +79,7 @@
   }
 
   .category-button:hover {
-    background-color: #000;
+    background-color: red;
   }
       .league-nav {
   margin-top: 0px;
@@ -88,6 +88,10 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.league-nav:hover {
+    background-color: red;
+  }
       
       .nav-button {
   display: flex;
