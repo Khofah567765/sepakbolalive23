@@ -139,9 +139,6 @@ background-color: red;
   height: 50px;
   object-fit: contain;
 }
-.league-icon:hover {
-    background-color: #8888;
-}
 
       
       .fallback {
