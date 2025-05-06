@@ -6,15 +6,27 @@
     <title>LIVE!!!</title>
     <link rel="icon" href="favicon.png" type="image/png">
     <style>
-        body {
-            margin: 0;
-            background: #000;
-            color: #fff;
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      overflow: hidden;
+      background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
+      background-size: 1600% 1600%;
+      animation: rainbowBG 15s linear infinite;
+      text-align: center;
+    }
+
+    @keyframes rainbowBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
         h1 {
             font-size: 24px;
@@ -181,7 +193,7 @@
 <body>
 
     <div class="marquee">
-    <span>======== Y-O-R-D-A-N ========</span>
+    <span></span>
     </div>
     
     <iframe id="player" src="https://i.ibb.co.com/xSwfR22P/20250506-171318.jpg" allowfullscreen></iframe>
