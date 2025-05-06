@@ -147,17 +147,46 @@
   .iptv-button:hover {
     background-color: #444;
   }
+
+         .marquee {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      background-color: transparent;
+      font-weight: bold;
+      color: black;
+      font-size: 18px;
+    }
+
+    .marquee span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll 10s linear infinite;
+    }
+
+    @keyframes scroll {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+        
         </style>
 
 </head>
 <body>
 
-    <h1 id="current-title">HI</h1>
+    <div class="marquee">
+    <span>Ini adalah teks berjalan dengan background transparan dan teks hitam tebal.</span>
+    </div>
+
+    <h1 id="current-title"></h1>
     
     <iframe id="player" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEOTn8cW-8iI6TA7-So1oRKc8w8MqcNOFPiA&s" allowfullscreen></iframe>
 
     <div id="champions" class="category active">
-        <h2>CHAMPIONS LEAGUE</h2>
+        <h1 id="current-title">CHAMPIONS LEAGUE</h1>
         <button class="server-button" onclick="changeChannel('https://dg384vhd9eh3k28wyeh.blogspot.com/p/fullscreen-hls-player-html-body-margin.html')">SERVER 1</button>
         <button class="server-button" onclick="changeChannel('https://dg384vhd9eh3k28wyeh.blogspot.com/p/fixed-zoom-hls-player-html-body-margin_30.html')">SERVER 2</button>
         <button class="server-button" onclick="changeChannel('https://dg384vhd9eh3k28wyeh.blogspot.com/p/fixed-zoom-hls-player-html-body-margin.html')">SERVER 3</button>
@@ -184,8 +213,7 @@
 
     
     <div id="spain" class="category">
-        <h2>LALIGA</h2>
-
+        <h1 id="current-title">LALIGA</h1>
         <button class="server-button" onclick="changeChannel('https://dg384vhd9eh3k28wyeh.blogspot.com/p/ziggo-s1.html')">480p</button>
         <button class="server-button" onclick="changeChannel('https://example.com/spain/720p.m3u8')">720p</button>
         <button class="server-button" onclick="changeChannel('https://example.com/spain/1080p.m3u8')">1080p</button>
@@ -239,7 +267,7 @@
     
           
     <div id="arab" class="category">
-        <h2>ARABIC LEAGUE</h2>
+        <h1 id="current-title">LIGA ROSHN SAUDI</h1>
         <button class="server-button" onclick="changeChannel('https://example.com/england/480p.m3u8')">480p</button>
         <button class="server-button" onclick="changeChannel('https://example.com/england/720p.m3u8')">720p</button>
         <button class="server-button" onclick="changeChannel('https://example.com/england/1080p.m3u8')">1080p</button>
