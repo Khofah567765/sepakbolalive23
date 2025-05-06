@@ -56,7 +56,7 @@
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
   const video = document.getElementById('video');
-  const videoSrc = 'https://top1-cdnnew.newkso.ru/top1-cdn/W0svhc8oj7/mono.m3u8';
+  const videoSrc = 'https://wo.cma.footballii.ir/hls2/b1_src.m3u8';
 
   if (Hls.isSupported()) {
     const hls = new Hls();
@@ -64,16 +64,24 @@
     hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
       video.play();
+      // Coba unmute setelah 5 detik
+      setTimeout(() => {
+        video.muted = false;
+        video.volume = 1.0;
+        console.log('Attempting to unmute');
+      }, 5000);
     });
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = videoSrc;
     video.addEventListener('loadedmetadata', () => {
       video.play();
+      setTimeout(() => {
+        video.muted = false;
+        video.volume = 1.0;
+        console.log('Attempting to unmute');
+      }, 5000);
     });
   } else {
     alert('Browser tidak mendukung HLS.');
   }
 </script>
-
-</body>
-</html>
