@@ -64,16 +64,24 @@
     hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
       video.play();
+      // Coba unmute setelah 5 detik
+      setTimeout(() => {
+        video.muted = false;
+        video.volume = 1.0;
+        console.log('Attempting to unmute');
+      }, 5000);
     });
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = videoSrc;
     video.addEventListener('loadedmetadata', () => {
       video.play();
+      setTimeout(() => {
+        video.muted = false;
+        video.volume = 1.0;
+        console.log('Attempting to unmute');
+      }, 5000);
     });
   } else {
     alert('Browser tidak mendukung HLS.');
   }
 </script>
-
-</body>
-</html>
