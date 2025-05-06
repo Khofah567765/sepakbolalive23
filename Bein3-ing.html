@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="name" content="s5d8f76sd8f7s6d8f76s8d7f8s">
+    
+    
+    <!-- Memuat library JW Player -->
+    <script src="//ssl.p.jwpcdn.com/player/v/8.26.0/jwplayer.js"></script>
+    <script src="//ssl.p.jwpcdn.com/player/v/8.21.0/jwplayer.js"></script>
+
+    <script>
+        // Menetapkan kunci lisensi JW Player
+        jwplayer.key = 'XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo';
+    </script>
+    <style>
+        /* Mengatur tampilan halaman agar fullscreen */
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Poppins, sans-serif;
+            background: #000;
+            overflow: hidden;
+        }
+
+        /* Container video agar fullscreen */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        /* Player harus mengambil seluruh area */
+        #player {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Kontainer untuk player -->
+    <div class="video-container">
+        <div id="player"></div>
+    </div>
+
+    <script>
+        // Inisialisasi JW Player
+        var playerInstance = jwplayer("player");
+
+        playerInstance.setup({
+            playlist: [{
+                "title": "",
+                "sources": [{
+                    "default": false,
+                    "type": "dash",
+                    "file": "https://a83aivottlinear-a.akamaihd.net/OTTB/syd-nitro/live/clients/dash/enc/gigxsk0lya/out/v1/df75d887bce4437b8fdf345ae455113b/cenc.mpd",
+                    "drm": {
+                        "clearkey": {
+                            "keyId": "4b203316c47c370a1eb9097c070d7226",
+                            "key": "676e6783f23789cdf4ff0486386145ed"
+                        }
+                    },
+                    "label": "0"
+                }]
+            }],
+            width: "100%",
+            height: "100%",
+            aspectratio: "16:9",
+            autostart: true,
+            cast: {},
+            
+        });
+    </script>
+
+</body>
+</html>
