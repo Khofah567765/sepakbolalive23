@@ -270,5 +270,20 @@
     <img src="https://i.ibb.co.com/jk8G05yd/20250503-005516.jpg" alt="england" class="league-icon">
         </button>
         </div>
-            <script src="js/script.js"></script>
-        
+            <script>
+        function changeChannel(url) {
+            document.getElementById('player').src = url;
+        }
+
+        function switchCategory(category) {
+            // Hide all categories
+            const categories = document.querySelectorAll('.category');
+            categories.forEach(cat => cat.classList.remove('active'));
+            
+            // Show the selected category
+            document.getElementById(category).classList.add('active');
+
+            // Change the title
+            document.getElementById('current-title').innerText = document.getElementById(category).querySelector('h2').innerText;
+        }
+    </script>
