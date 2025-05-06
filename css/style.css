@@ -7,7 +7,30 @@
             flex-direction: column;
             align-items: center;
         }
+.marquee {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      background-color: transparent;
+      font-weight: bold;
+      color: whute;
+      font-size: 16px;
+    }
 
+    .marquee span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll 10s linear infinite;
+    }
+
+    @keyframes scroll {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+        
         h1 {
             font-size: 24px;
             margin-top: 20px;
@@ -144,27 +167,4 @@ background-color: red;
   .iptv-button:hover {
     background-color: #8888;
   }
-    .marquee {
-      width: 100%;
-      overflow: hidden;
-      white-space: nowrap;
-      background-color: transparent;
-      font-weight: bold;
-      color: whute;
-      font-size: 16px;
-    }
-
-    .marquee span {
-      display: inline-block;
-      padding-left: 100%;
-      animation: scroll 10s linear infinite;
-    }
-
-    @keyframes scroll {
-      0% {
-        transform: translateX(0%);
-      }
-      100% {
-        transform: translateX(-100%);
-      }
     
