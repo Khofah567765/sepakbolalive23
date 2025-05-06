@@ -77,6 +77,9 @@
     transition: background-color 0.3s;
     text-align: center;
   }
+.category-button: hover {
+background-color: red;
+}
 
       .league-nav {
   margin-top: 0px;
@@ -103,7 +106,7 @@
 }
 
 .nav-button:hover {
-  background-color: #8888;
+  background-color: green;
   transform: scale(1.05);
 }
 
@@ -135,5 +138,5 @@
   }
 
   .iptv-button:hover {
-    background-color: #444;
+    background-color: blue;
   }
