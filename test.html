@@ -97,24 +97,43 @@
     text-decoration: none;
   }
 
-    .contact-title {
-     text-align: center;
-     font-size: 16px;
-     margin-top: 40px;
-     color: #ffff;
-}
+    #contact-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #00aaff;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 20px;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
 
-  .contact-icons {
-     display: flex;
-     justify-content: center;
-     gap: 20px;
-     margin-top: 15px;
-}
+  #popup-contact {
+    display: none;
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    background: #000;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    z-index: 999;
+  }
 
-  .contact-icons img {
-    width: 48px;
-    height: 48px;
-    transition: transform 0.3s;
+  #popup-contact a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    margin: 8px 0;
+  }
+
+  #popup-contact img {
+    margin-right: 8px;
   }
 
   </style>
@@ -177,24 +196,45 @@ Kami menyediakan paket wisata Banyuwangi lengkap dengan transportasi, penginapan
   </a>
 </div>
 
-  <h2 class="contact-title">Kontak Person</h2>
-<div class="contact-icons">
+  <button id="contact-btn">Kontak Person</button>
+
+<!-- Popup Kontak -->
+<div id="popup-contact">
   <a href="https://wa.me/6282218493327" target="_blank">
-    <img src="https://i.ibb.co.com/tTq0X2wR/20250507-144833.png" alt="WhatsApp">
+    <img src="https://i.ibb.co.com/tTq0X2wR/20250507-144833.png" alt="WhatsApp" width="24" height="24" />
+    WhatsApp
   </a>
   <a href="https://www.instagram.com/banyuwangi.trip?igsh=YzljYTk1ODg3Zg==" target="_blank">
-    <img src="https://i.ibb.co.com/cK382TQG/20250507-144807.png" alt="Instagram">
+    <img src="https://i.ibb.co.com/cK382TQG/20250507-144807.png" alt="Instagram" width="24" height="24" />
+    Instagram
   </a>
   <a href="https://www.tiktok.com/@dorigober?_t=ZS-8w9UEo7jUHg&_r=1" target="_blank">
-    <img src="https://i.ibb.co.com/TMRg53PG/20250507-144904.png" alt="TikTok">
+    <img src="https://i.ibb.co.com/TMRg53PG/20250507-144904.png" alt="TikTok" width="24" height="24" />
+    TikTok
   </a>
   <a href="https://www.youtube.com/channel/UCD2DQ_2bLJc2y73Be8zPF6A" target="_blank">
-    <img src="https://i.ibb.co.com/rfsQnXF6/20250507-144926.png" alt="YouTube">
+    <img src="https://i.ibb.co.com/rfsQnXF6/20250507-144926.png" alt="YouTube" width="24" height="24" />
+    YouTube
   </a>
-  
-</div>
 </div>
 
+<script>
+  const btn = document.getElementById("contact-btn");
+  const popup = document.getElementById("popup-contact");
+
+  btn.addEventListener("click", () => {
+    popup.style.display = popup.style.display === "block" ? "none" : "block";
+  });
+
+  // Tutup popup saat klik di luar
+  document.addEventListener("click", function (e) {
+    if (!btn.contains(e.target) && !popup.contains(e.target)) {
+      popup.style.display = "none";
+    }
+  });
+</script>
+
+  
   <h2><strong>Copyright©2025</strong> banyuwangi.trip. <strong>All Rights Reserved</strong></h2>
 </body>
 </html>
