@@ -145,19 +145,11 @@
   margin-right: 8px;
 }
 
-#close-btn {
-  background: transparent;
-  border: none;
-  font-size: 16px;
-  color: #999;
-  float: right;
-  cursor: pointer;
-}
-
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 
   </style>
 </head>
@@ -224,7 +216,6 @@ Kami menyediakan paket wisata Banyuwangi lengkap dengan transportasi, penginapan
   <button id="toggle-btn">Kontak Person</button>
 
   <div id="contact-popup">
-    <button id="close-btn">❌</button>
     <a href="https://wa.me/6282218493327" target="_blank">
       <img src="https://i.ibb.co.com/tTq0X2wR/20250507-144833.png" alt="WhatsApp" width="24" height="24" />
       WhatsApp
@@ -245,16 +236,13 @@ Kami menyediakan paket wisata Banyuwangi lengkap dengan transportasi, penginapan
 </div>
 
 
+
 <script>
   const toggleBtn = document.getElementById("toggle-btn");
   const popup = document.getElementById("contact-popup");
-  const closeBtn = document.getElementById("close-btn");
-  const contactBox = document.getElementById("contact-box");
 
-  let minimized = false;
-  let expanded = false;
+  let visible = false;
 
-  // Tampilkan tombol jika scroll setengah halaman
   window.addEventListener("scroll", function () {
     const halfPage = document.body.scrollHeight / 2;
     if (window.scrollY > halfPage) {
@@ -262,29 +250,21 @@ Kami menyediakan paket wisata Banyuwangi lengkap dengan transportasi, penginapan
     } else {
       toggleBtn.style.display = "none";
       popup.style.display = "none";
-      expanded = false;
+      visible = false;
     }
   });
 
   toggleBtn.addEventListener("click", function () {
-    if (!expanded) {
+    if (!visible) {
       popup.style.display = "block";
-      expanded = true;
-      minimized = false;
-    } else if (minimized) {
-      popup.style.display = "block";
-      minimized = false;
+      visible = true;
     } else {
       popup.style.display = "none";
-      expanded = false;
+      visible = false;
     }
   });
-
-  closeBtn.addEventListener("click", function () {
-    popup.style.display = "none";
-    minimized = true;
-  });
 </script>
+
 
 
   
