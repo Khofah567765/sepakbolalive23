@@ -31,15 +31,6 @@
       text-align: center;
       margin-bottom: 0px;
    }
-    #animated-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1; /* di belakang semua elemen */
-  background: black;
-}
 
   
     .destination {
@@ -236,37 +227,6 @@ Kami menyediakan paket wisata Banyuwangi lengkap dengan transportasi, penginapan
   </a>
 </div>
 
-
-  <script>
-const canvas = document.getElementById("animated-bg");
-const ctx = canvas.getContext("2d");
-
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
-
-let t = 0;
-function draw() {
-  let w = canvas.width;
-  let h = canvas.height;
-  let gradient = ctx.createLinearGradient(0, 0, w, h);
-  gradient.addColorStop(0, `hsl(${t % 360}, 70%, 60%)`);
-  gradient.addColorStop(1, `hsl(${(t + 120) % 360}, 70%, 60%)`);
-
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, w, h);
-
-  t += 0.5;
-  requestAnimationFrame(draw);
-}
-draw();
-</script>
-
-
-<script>
 <script>
   const btn = document.getElementById("contact-btn");
   const popup = document.getElementById("popup-contact");
@@ -282,8 +242,6 @@ draw();
     }
   });
 </script>
-
-
 
   
   <h4><strong>Copyright©2025</strong> banyuwangi.trip. <strong>All Rights Reserved</strong></h4>
