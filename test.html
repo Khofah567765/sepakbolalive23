@@ -31,6 +31,16 @@
       text-align: center;
       margin-bottom: 0px;
    }
+    #animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* di belakang semua elemen */
+  background: black;
+}
+
   
     .destination {
       margin-bottom: 40px;
@@ -104,57 +114,49 @@
     text-decoration: none;
   }
 
-    #contact-box {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 999;
-}
+    #contact-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #00aaff;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 20px;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
 
-#toggle-btn {
-  display: none;
-  background-color: #00aaff;
-  color: white;
-  border: none;
-  border-radius: 50px;
-  padding: 12px 20px;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
+  #popup-contact {
+    display: none;
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    background: #000;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    z-index: 999;
+  }
 
-#contact-popup {
-  display: none;
-  background: white;
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  width: 200px;
-  animation: fadeIn 0.3s ease;
-}
+  #popup-contact a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    margin: 8px 0;
+  }
 
-#contact-popup a {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  margin: 8px 0;
-}
-
-#contact-popup img {
-  margin-right: 8px;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-
+  #popup-contact img {
+    margin-right: 8px;
+  }
   </style>
 </head>
 <body>
-
+<canvas id="animated-bg"></canvas>
+  
   <h1><strong>SELAMAT DATANG DI WISATA BANYUWANGI</strong></h1>
 
   <div class="destination">
@@ -212,60 +214,73 @@ Kami menyediakan paket wisata Banyuwangi lengkap dengan transportasi, penginapan
 </div>
 
   <!-- Tombol Kontak Person -->
-<div id="contact-box">
-  <button id="toggle-btn">Kontak Person</button>
+<button id="contact-btn">Kontak Person</button>
 
-  <div id="contact-popup">
-    <a href="https://wa.me/6282218493327" target="_blank">
-      <img src="https://i.ibb.co.com/tTq0X2wR/20250507-144833.png" alt="WhatsApp" width="24" height="24" />
-      WhatsApp
-    </a>
-    <a href="https://www.instagram.com/banyuwangi.trip?igsh=YzljYTk1ODg3Zg==" target="_blank">
-      <img src="https://i.ibb.co.com/cK382TQG/20250507-144807.png" alt="Instagram" width="24" height="24" />
-      Instagram
-    </a>
-    <a href="https://www.tiktok.com/@dorigober?_t=ZS-8w9UEo7jUHg&_r=1" target="_blank">
-      <img src="https://i.ibb.co.com/TMRg53PG/20250507-144904.png" alt="TikTok" width="24" height="24" />
-      TikTok
-    </a>
-    <a href="https://www.youtube.com/channel/UCD2DQ_2bLJc2y73Be8zPF6A" target="_blank">
-      <img src="https://i.ibb.co.com/rfsQnXF6/20250507-144926.png" alt="YouTube" width="24" height="24" />
-      YouTube
-    </a>
-  </div>
+<!-- Popup Kontak -->
+<div id="popup-contact">
+  <a href="https://wa.me/6282218493327" target="_blank">
+    <img src="https://i.ibb.co.com/tTq0X2wR/20250507-144833.png" alt="WhatsApp" width="24" height="24" />
+    WhatsApp
+  </a>
+  <a href="https://www.instagram.com/banyuwangi.trip?igsh=YzljYTk1ODg3Zg==" target="_blank">
+    <img src="https://i.ibb.co.com/cK382TQG/20250507-144807.png" alt="Instagram" width="24" height="24" />
+    Instagram
+  </a>
+  <a href="https://www.tiktok.com/@dorigober?_t=ZS-8w9UEo7jUHg&_r=1" target="_blank">
+    <img src="https://i.ibb.co.com/TMRg53PG/20250507-144904.png" alt="TikTok" width="24" height="24" />
+    TikTok
+  </a>
+  <a href="https://www.youtube.com/channel/UCD2DQ_2bLJc2y73Be8zPF6A" target="_blank">
+    <img src="https://i.ibb.co.com/rfsQnXF6/20250507-144926.png" alt="YouTube" width="24" height="24" />
+    YouTube
+  </a>
 </div>
 
 
+  <script>
+const canvas = document.getElementById("animated-bg");
+const ctx = canvas.getContext("2d");
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+let t = 0;
+function draw() {
+  let w = canvas.width;
+  let h = canvas.height;
+  let gradient = ctx.createLinearGradient(0, 0, w, h);
+  gradient.addColorStop(0, `hsl(${t % 360}, 70%, 60%)`);
+  gradient.addColorStop(1, `hsl(${(t + 120) % 360}, 70%, 60%)`);
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, w, h);
+
+  t += 0.5;
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
 
 <script>
-  const btn = document.getElementById("contact-btn");
-  const popup = document.getElementById("popup-contact");
+<script>
+  const btn = document.getElementById("contact-btn");
+  const popup = document.getElementById("popup-contact");
 
-  // Toggle popup saat tombol diklik
-  btn.addEventListener("click", () => {
-    popup.style.display = popup.style.display === "block" ? "none" : "block";
-  });
+  btn.addEventListener("click", () => {
+    popup.style.display = popup.style.display === "block" ? "none" : "block";
+  });
 
-  // Tutup popup saat klik di luar
-  document.addEventListener("click", function (e) {
-    if (!btn.contains(e.target) && !popup.contains(e.target)) {
-      popup.style.display = "none";
-    }
-  });
-
-  // Tampilkan tombol jika scroll sudah setengah halaman
-  window.addEventListener("scroll", function () {
-    const halfScroll = document.documentElement.scrollHeight / 2;
-    if (window.scrollY > halfScroll) {
-      btn.style.display = "block";
-    } else {
-      btn.style.display = "none";
-      popup.style.display = "none"; // sekaligus sembunyikan popup
-    }
-  });
-
-  // Awalnya disembunyikan
-  btn.style.display = "none";
+  // Tutup popup saat klik di luar
+  document.addEventListener("click", function (e) {
+    if (!btn.contains(e.target) && !popup.contains(e.target)) {
+      popup.style.display = "none";
+    }
+  });
 </script>
 
 
