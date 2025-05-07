@@ -238,31 +238,34 @@ Kami menyediakan paket wisata Banyuwangi lengkap dengan transportasi, penginapan
 
 
 <script>
-  const toggleBtn = document.getElementById("toggle-btn");
-  const popup = document.getElementById("contact-popup");
+  const btn = document.getElementById("contact-btn");
+  const popup = document.getElementById("popup-contact");
 
-  let visible = false;
+  // Toggle popup saat tombol diklik
+  btn.addEventListener("click", () => {
+    popup.style.display = popup.style.display === "block" ? "none" : "block";
+  });
 
-  window.addEventListener("scroll", function () {
-    const halfPage = document.body.scrollHeight / 2;
-    if (window.scrollY > halfPage) {
-      toggleBtn.style.display = "block";
-    } else {
-      toggleBtn.style.display = "none";
-      popup.style.display = "none";
-      visible = false;
-    }
-  });
+  // Tutup popup saat klik di luar
+  document.addEventListener("click", function (e) {
+    if (!btn.contains(e.target) && !popup.contains(e.target)) {
+      popup.style.display = "none";
+    }
+  });
 
-  toggleBtn.addEventListener("click", function () {
-    if (!visible) {
-      popup.style.display = "block";
-      visible = true;
-    } else {
-      popup.style.display = "none";
-      visible = false;
-    }
-  });
+  // Tampilkan tombol jika scroll sudah setengah halaman
+  window.addEventListener("scroll", function () {
+    const halfScroll = document.documentElement.scrollHeight / 2;
+    if (window.scrollY > halfScroll) {
+      btn.style.display = "block";
+    } else {
+      btn.style.display = "none";
+      popup.style.display = "none"; // sekaligus sembunyikan popup
+    }
+  });
+
+  // Awalnya disembunyikan
+  btn.style.display = "none";
 </script>
 
 
