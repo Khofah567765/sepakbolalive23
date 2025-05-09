@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href=".png" type="image/png">
   <title>masjid.annur</title>
+  <link rel="icon" href="favicon2.png" type="image/png">
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -13,25 +13,27 @@
       background: #f3f4f6;
       color: #2d3748;
     }
-.logo-header {
-  display: flex;
-  align-items: center;
-  padding: 20px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #ddd;
-  border-radius: 12px;
-}
 
-.logo-img {
-  height: 60px;
-  margin-right: 5px;
-}
+    .logo-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #ddd;
+      border-radius: 12px;
+    }
 
-.logo-title {
-  font-size: 1.2rem;
-  color: #333;
-  margin: 0;
-}
+    .logo-img {
+      height: 60px;
+      margin-right: 10px;
+    }
+
+    .logo-title {
+      font-size: 18px;
+      color: #333;
+      margin: 0;
+      text-align: center;
+    }
 
     .header {
       display: flex;
@@ -41,11 +43,13 @@
       margin-bottom: 20px;
       font-weight: bold;
     }
+
     .clock {
-      font-size: 14px;
-      color: #4a5568;
+      font-size: 16px;
+      color: #000;
       text-align: center;
     }
+
     h1 {
       text-align: center;
       color: #2b6cb0;
@@ -54,164 +58,183 @@
       margin-top: 10px;
       font-weight: bold;
     }
+
     h2 {
       font-size: 14px;
-      color: #4a5568;
-      }
+      color: #000;
+    }
+
     h3 {
-      font-size: 14px;
-      color: #4a5568;
+      font-size: 20px;
+      color: #000;
       text-align: left;
     }
-    
+
     .table-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
       align-items: center;
     }
+
     .card {
       background: white;
       border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       padding: 20px;
       transition: 0.3s;
-      align-items: center;
     }
+
     .card:hover {
       transform: translateY(-3px);
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     }
+
     .card h2 {
       margin: 0 0 10px;
       color: #2f855a;
       font-size: 20px;
+      text-align: center;
     }
+
     .card .date {
-      color: #718096;
-      font-size: 14px;
+      color: #000;
+      font-size: 16px;
       margin-bottom: 16px;
       text-align: center;
     }
-    .role {
-      margin-bottom: 10px;
-      padding: 8px;
+
+    .role-block {
+      margin-bottom: 12px;
+      padding: 10px;
       background-color: #edf2f7;
       border-radius: 8px;
-      font-weight: bold;
-      color: #000;
-      text-align: left;
-    }
-    .name {
-      color: #000;
-      font-size: 15px;
       text-align: center;
     }
 
-.list-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: start;
-}
+    .role-title {
+      font-weight: bold;
+      color: #2d3748;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
 
-.list-group {
-  background: white;
-  border-radius: 12px;
-  padding: 15px 20px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-  width: 250px;
-}
+    .role-name {
+      color: #1a202c;
+      font-size: 18px;
+    }
 
-.list-group h2 {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  color: #226644;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 5px;
-}
+    .list-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: start;
+    }
 
-.styled-list {
-  padding-left: 20px;
-  margin: 0;
-}
+    .list-group {
+      background: white;
+      border-radius: 12px;
+      padding: 15px 20px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      width: 250px;
+    }
 
-.styled-list li {
-  margin-bottom: 6px;
-}
-    
+    .list-group h2 {
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+      color: #226644;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+
+    .styled-list {
+      padding-left: 5px;
+      margin: 0;
+      padding-bottom: 5px;
+    }
+
+    .styled-list li {
+      margin-bottom: 5px;
+    }
   </style>
 </head>
 <body>
   <header class="logo-header">
     <img src="favicon2.png" alt="Logo Masjid" class="logo-img">
-    <h1 class="logo-title">JADWAL PETUGAS SHOLAT JUMAT
-    MASJID ANNUR</h1>
+    <h1 class="logo-title">JADWAL PETUGAS SHOLAT JUMAT MASJID ANNUR</h1>
   </header>
-  
-  <div class="header">
-  <div class="clock" id="clock">Memuat waktu...</div>
-    </div>
-  
- 
 
-  
+  <div class="header">
+    <div class="clock" id="clock">Memuat waktu...</div>
+  </div>
 
   <div class="table-container">
     <div class="card">
-      <h2>Jumat Ini</h2>
+      <h2>JUMAT INI</h2>
       <div class="date" id="thisFridayDate"></div>
-      <div class="role">Khotib<span class="name" id="khotibThis"></span></div>
-      <div class="role">Bilal<span class="name" id="bilalThis"></span></div>
-      <div class="role">Muadzin<span class="name" id="muadzinThis"></span></div>
+
+      <div class="role-block">
+        <div class="role-title">KHOTIB</div>
+        <div class="role-name" id="khotibThis"></div>
+      </div>
+      <div class="role-block">
+        <div class="role-title">BILAL</div>
+        <div class="role-name" id="bilalThis"></div>
+      </div>
+      <div class="role-block">
+        <div class="role-title">MUADZIN</div>
+        <div class="role-name" id="muadzinThis"></div>
+      </div>
     </div>
 
     <div class="card">
-      <h2>Jumat Depan</h2>
+      <h2>JUMAT AKAN DATANG</h2>
       <div class="date" id="nextFridayDate"></div>
-      <div class="role">Khotib<span class="name" id="khotibNext"></span></div>
-      <div class="role">Bilal<span class="name" id="bilalNext"></span></div>
-      <div class="role">Muadzin<span class="name" id="muadzinNext"></span></div>
+
+      <div class="role-block">
+        <div class="role-title">KHOTIB</div>
+        <div class="role-name" id="khotibNext"></div>
+      </div>
+      <div class="role-block">
+        <div class="role-title">BILAL</div>
+        <div class="role-name" id="bilalNext"></div>
+      </div>
+      <div class="role-block">
+        <div class="role-title">MUADZIN</div>
+        <div class="role-name" id="muadzinNext"></div>
+      </div>
     </div>
   </div>
-  <h3>UPDATE JADWAL OTOMATIS SETIAP HARI JUMAT PUKUL 11:59 WIB</h3>
 
+  <h2>UPDATE JADWAL OTOMATIS SETIAP JUMAT PUKUL 11:59 WIB</h2>
+  
   <section class="list-section">
     <div class="list-group">
+      <h3>DAFTAR NAMA PETUGAS</h3>
       <h2>KHOTIB</h2>
-      <ol class="styled-list">
+      <ul class="styled-list">
         <li>K. M. MUNIR</li>
         <li>Ust. A. JUNAIDI</li>
         <li>Ust. A. FIRDAUSI</li>
         <li>Ust. ZAINI</li>
-      </ol>
-    </div>
-
-    <div class="list-group">
-      <h2>BILAL</h2>
-      <ol class="styled-list">
+        <h2>BILAL</h2>
         <li>Ust. SYAIFUL</li>
         <li>Ust. MUHTADI</li>
         <li>MISTUM</li>
         <li>MISDI</li>
         <li>ARIF RAHMAN.H</li>
-      </ol>
-    </div>
-
-    <div class="list-group">
-      <h2>MUADZIN</h2>
-      <ol class="styled-list">
+        <h2>MUADZIN</h2>     
         <li>SUNAHWAN</li>
         <li>AMIL YORDAN</li>
         <li>ALFIN</li>
-      </ol>
+        </ul>
     </div>
   </section>
 
   <script>
-    const khotib = ["K. M.Munir", "Ust. Zaini", "Ust. A.Firdausi", "Ust  Junaidi"];
-    const bilal = ["Ust. Muhtadi", "Misdi", "Arif", "Mistum"];
-    const muadzin = ["Alfin", "Yordan", "Sunahwan"];
+    const khotib = ["K. M.MUNIR", "Ust. ZAINI", "Ust. A.FIRDAUSI", "Ust. JUNAIDI"];
+    const bilal = ["Ust. MUHTADI", "MISDI", "ARIF RAHMAN HAKIM", "MISTUM"];
+    const muadzin = ["ALFIN", "AMIL YORDAN", "SUNAHWAN"];
 
     function updateClock() {
       const now = new Date();
@@ -239,7 +262,7 @@
     }
 
     function getIndexForFriday(date) {
-      const base = new Date(2025, 4, 9, 11, 59); // 9 Mei 2025 11:59
+      const base = new Date(2025, 4, 9, 11, 59);
       const diff = date - base;
       return Math.floor(diff / (7 * 24 * 60 * 60 * 1000));
     }
@@ -264,9 +287,8 @@
       document.getElementById("muadzinNext").innerText = muadzin[indexNext % muadzin.length];
     }
 
-    setInterval(updateSchedule, 1000); // update live setiap detik
+    setInterval(updateSchedule, 1000);
     updateSchedule();
   </script>
-
 </body>
 </html>
