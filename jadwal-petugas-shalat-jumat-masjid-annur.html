@@ -107,6 +107,39 @@
       font-size: 15px;
       text-align: center;
     }
+
+.list-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: start;
+}
+
+.list-group {
+  background: white;
+  border-radius: 12px;
+  padding: 15px 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  width: 250px;
+}
+
+.list-group h2 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: #226644;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+.styled-list {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.styled-list li {
+  margin-bottom: 6px;
+}
+    
   </style>
 </head>
 <body>
@@ -142,6 +175,38 @@
     </div>
   </div>
   <h3>UPDATE JADWAL OTOMATIS SETIAP HARI JUMAT PUKUL 11:59 WIB</h3>
+
+  <section class="list-section">
+    <div class="list-group">
+      <h2>KHOTIB</h2>
+      <ol class="styled-list">
+        <li>K. M. MUNIR</li>
+        <li>Ust. A. JUNAIDI</li>
+        <li>Ust. A. FIRDAUSI</li>
+        <li>Ust. ZAINI</li>
+      </ol>
+    </div>
+
+    <div class="list-group">
+      <h2>BILAL</h2>
+      <ol class="styled-list">
+        <li>Ust. SYAIFUL</li>
+        <li>Ust. MUHTADI</li>
+        <li>MISTUM</li>
+        <li>MISDI</li>
+        <li>ARIF RAHMAN.H</li>
+      </ol>
+    </div>
+
+    <div class="list-group">
+      <h2>MUADZIN</h2>
+      <ol class="styled-list">
+        <li>SUNAHWAN</li>
+        <li>AMIL YORDAN</li>
+        <li>ALFIN</li>
+      </ol>
+    </div>
+  </section>
 
   <script>
     const khotib = ["K. M.Munir", "Ust. Zaini", "Ust. A.Firdausi", "Ust  Junaidi"];
