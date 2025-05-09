@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Jadwal Sholat Jumat</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f3f4f6;
+      color: #2d3748;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .clock {
+      font-size: 14px;
+      color: #4a5568;
+      text-align: left;
+    }
+    h1 {
+      text-align: center;
+      color: #2b6cb0;
+      font-size: 20px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    h2 {
+      font-size: 14px;
+      color: #4a5568;
+      text-align: left;
+      }
+    h3 {
+      font-size: 14px;
+      color: #4a5568;
+      text-align: left;
+    }
+    
+    .table-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      transition: 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      color: #2f855a;
+      font-size: 20px;
+    }
+    .card .date {
+      color: #718096;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .role {
+      margin-bottom: 10px;
+      padding: 8px;
+      background-color: #edf2f7;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #2d3748;
+    }
+    .name {
+      color: #4a5568;
+      font-size: 15px;
+      margin-left: 10px;
+      font-weight: normal;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jadwal Petugas Sholat Jumat</h1>
+  
+
+<h3>Update jadwal setiap Hari Jum'at jam 11:59 WIB</h3>
+  <div class="header">
+  <div class="clock" id="clock">Memuat waktu...</div>
+    </div>
+  
+ 
+
+  
+
+  <div class="table-container">
+    <div class="card">
+      <h2>Jumat Ini</h2>
+      <div class="date" id="thisFridayDate"></div>
+      <div class="role">Khotib:<span class="name" id="khotibThis"></span></div>
+      <div class="role">Bilal:<span class="name" id="bilalThis"></span></div>
+      <div class="role">Muadzin:<span class="name" id="muadzinThis"></span></div>
+    </div>
+
+    <div class="card">
+      <h2>Jumat Depan</h2>
+      <div class="date" id="nextFridayDate"></div>
+      <div class="role">Khotib:<span class="name" id="khotibNext"></span></div>
+      <div class="role">Bilal:<span class="name" id="bilalNext"></span></div>
+      <div class="role">Muadzin:<span class="name" id="muadzinNext"></span></div>
+    </div>
+  </div>
+
+  <script>
+    const khotib = ["K. M.Munir", "Ust. Zaini", "Ust. A.Firdausi", "Ust  Junaidi"];
+    const bilal = ["Ust. Muhtadi", "Misdi", "Arif", "Mistum"];
+    const muadzin = ["Alfin", "Yordan", "Sunahwan"];
+
+    function updateClock() {
+      const now = new Date();
+      const waktu = now.toLocaleTimeString('id-ID');
+      const tanggal = now.toLocaleDateString('id-ID', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+      document.getElementById("clock").innerText = `${tanggal} - ${waktu}`;
+    }
+
+    function getUpcomingFridays(baseDate) {
+      let date = new Date(baseDate);
+      const day = date.getDay();
+      const diffToFriday = (5 - day + 7) % 7;
+      date.setDate(date.getDate() + diffToFriday);
+      date.setHours(11, 59, 0, 0);
+      const fridayThis = new Date(date);
+      let now = new Date();
+      if (now >= fridayThis) {
+        fridayThis.setDate(fridayThis.getDate() + 7);
+      }
+      const fridayNext = new Date(fridayThis);
+      fridayNext.setDate(fridayThis.getDate() + 7);
+      return [fridayThis, fridayNext];
+    }
+
+    function getIndexForFriday(date) {
+      const base = new Date(2025, 4, 9, 11, 59); // 9 Mei 2025 11:59
+      const diff = date - base;
+      return Math.floor(diff / (7 * 24 * 60 * 60 * 1000));
+    }
+
+    function updateSchedule() {
+      updateClock();
+
+      const [thisFri, nextFri] = getUpcomingFridays(new Date());
+      const indexThis = getIndexForFriday(thisFri);
+      const indexNext = getIndexForFriday(nextFri);
+
+      const format = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById("thisFridayDate").innerText = thisFri.toLocaleDateString('id-ID', format);
+      document.getElementById("nextFridayDate").innerText = nextFri.toLocaleDateString('id-ID', format);
+
+      document.getElementById("khotibThis").innerText = khotib[indexThis % khotib.length];
+      document.getElementById("bilalThis").innerText = bilal[indexThis % bilal.length];
+      document.getElementById("muadzinThis").innerText = muadzin[indexThis % muadzin.length];
+
+      document.getElementById("khotibNext").innerText = khotib[indexNext % khotib.length];
+      document.getElementById("bilalNext").innerText = bilal[indexNext % bilal.length];
+      document.getElementById("muadzinNext").innerText = muadzin[indexNext % muadzin.length];
+    }
+
+    setInterval(updateSchedule, 1000); // update live setiap detik
+    updateSchedule();
+  </script>
+
+</body>
+</html>
