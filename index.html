@@ -3,67 +3,383 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Maintenance</title>
+    <title>TV Online Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        :root {
+            --primary: #2563eb;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
         }
-        .container {
-            text-align: center;
-            background: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        
+        .channel-card {
+            transition: all 0.3s ease;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+        
+        .channel-card:hover {
+            transform: translateY(-5px);
+            background: rgba(30, 41, 59, 1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
         }
-        p {
-            font-size: 1.2em;
-            margin-bottom: 20px;
+        
+        .player-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
         }
-        .gear {
-            width: 100px; /* ukuran gigi */
-            height: 100px; /* ukuran gigi */
-            margin: 20px auto;
-            background-image: url('https://images.icon-icons.com/390/PNG/512/cog_39279.png'); /* Ganti URL ini dengan gambar gigi anda */
-            background-size: cover;
-            animation: spin 2s linear infinite;
+        
+        .player-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
         }
+        
+        .selected {
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.3);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--light);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
         @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
-        .footer {
-            font-size: 0.9em;
-            color: #777;
+        
+        #searchInput::placeholder {
+            color: #94a3b8;
+        }
+        
+        @media (max-width: 640px) {
+            .channel-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
         }
     </style>
 </head>
-<body>
-
-    <div class="container">
-        <h1>503 - Under Maintenance</h1>
-        <p>Situs ini sedang dalam perbaikan.</p>
-        <div class="gear"></div>
-        <p>Terima kasih atas pengertian Anda!</p>
-        <div class="footer">
-            &copy; 2025 Maintenance
+<body class="min-h-screen">
+    <!-- Header Section -->
+    <header class="bg-slate-800 shadow-lg sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <img src="https://placehold.co/50x50" alt="Logo TV Online berwarna biru dengan ikon layar TV" class="mr-3 rounded-full" />
+                <h1 class="text-2xl font-bold text-blue-400">TV<span class="text-white">Online</span></h1>
+            </div>
+            
+            <div class="relative w-full md:w-64">
+                <input type="text" id="searchInput" placeholder="Cari channel..." 
+                    class="w-full bg-slate-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button id="searchBtn" class="absolute right-2 top-2 text-slate-400 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+            </div>
         </div>
-    </div>
+    </header>
 
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Player Section -->
+        <section class="mb-8 relative">
+            <div id="selectedChannel" class="text-lg font-semibold mb-2 text-blue-300">Pilih channel untuk memulai</div>
+            
+            <div class="player-container bg-black rounded-lg shadow-2xl overflow-hidden">
+                <iframe id="playerFrame" class="player-iframe" allowfullscreen></iframe>
+                
+                <div id="playerPlaceholder" class="absolute inset-0 flex items-center justify-center bg-black">
+                    <div class="text-center px-4">
+                        <img src="https://placehold.co/300x150" alt="Layar TV kosong dengan warna gelap dan watermark TV Online di tengah" class="mx-auto mb-4 opacity-50" />
+                        <p class="text-slate-400">Pilih channel dari daftar di bawah ini untuk memulai streaming</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-between mt-4">
+                <div class="flex items-center space-x-4">
+                    <button id="fullscreenBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                        Layar Penuh
+                    </button>
+                    <button id="volumeBtn" class="text-slate-400 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6a7.975 7.975 0 015.657 2.343m0 0a7.975 7.975 0 010 11.314m-11.314 0a7.975 7.975 0 010-11.314m0 0a7.975 7.975 0 015.657-2.343" />
+                        </svg>
+                    </button>
+                    <input type="range" id="volumeControl" min="0" max="100" value="50" 
+                        class="w-20 accent-blue-500 bg-slate-700 rounded-lg h-1.5">
+                </div>
+                
+                <div id="qualitySelector" class="hidden">
+                    <label for="qualityOptions" class="text-slate-400 mr-2">Kualitas:</label>
+                    <select id="qualityOptions" class="bg-slate-700 text-white px-2 py-1 rounded focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        <option value="hd">HD</option>
+                        <option value="sd" selected>SD</option>
+                        <option value="low">Rendah</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Channel List Section -->
+        <section>
+            <h2 class="text-xl font-bold mb-4 text-blue-300 border-b border-slate-700 pb-2">Daftar Channel TV</h2>
+            
+            <div id="categoryTabs" class="flex space-x-2 mb-6 overflow-x-auto pb-2">
+                <button class="category-tab px-4 py-2 rounded-full font-medium whitespace-nowrap bg-blue-600 text-white" data-category="all">Semua</button>
+                <button class="category-tab px-4 py-2 rounded-full font-medium whitespace-nowrap bg-slate-700 hover:bg-slate-600 text-white" data-category="news">Berita</button>
+                <button class="category-tab px-4 py-2 rounded-full font-medium whitespace-nowrap bg-slate-700 hover:bg-slate-600 text-white" data-category="entertainment">Hiburan</button>
+                <button class="category-tab px-4 py-2 rounded-full font-medium whitespace-nowrap bg-slate-700 hover:bg-slate-600 text-white" data-category="sports">Olahraga</button>
+                <button class="category-tab px-4 py-2 rounded-full font-medium whitespace-nowrap bg-slate-700 hover:bg-slate-600 text-white" data-category="kids">Anak-anak</button>
+            </div>
+            
+            <div id="channelList" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <!-- Channels will be loaded here -->
+            </div>
+            
+            <div id="loadingIndicator" class="text-center py-8 hidden">
+                <div class="loading inline-block"></div>
+                <span class="ml-2 text-slate-400">Memuat channel...</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 py-6 mt-12">
+        <div class="container mx-auto px-4 text-center text-slate-400">
+            <p>&copy; 2023 TV Online. Semua hak dilindungi.</p>
+            <p class="mt-2 text-sm">Streaming dengan kualitas terbaik. Untuk hiburan keluarga Anda.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mock channel data (in a real app, this would come from an API)
+            const channels = [
+                { id: 1, name: "RCTI", category: "entertainment", logo: "https://placehold.co/100x60?text=RCTI", streamUrls: { hd: "https://example.com/rcti-hd", sd: "https://example.com/rcti-sd", low: "https://example.com/rcti-low" } },
+                { id: 2, name: "MNCTV", category: "entertainment", logo: "https://placehold.co/100x60?text=MNCTV", streamUrls: { hd: "https://example.com/mnctv-hd", sd: "https://example.com/mnctv-sd", low: "https://example.com/mnctv-low" } },
+                { id: 3, name: "GTV", category: "entertainment", logo: "https://placehold.co/100x60?text=GTV", streamUrls: { hd: "https://example.com/gtv-hd", sd: "https://example.com/gtv-sd", low: "https://example.com/gtv-low" } },
+                { id: 4, name: "iNews", category: "news", logo: "https://placehold.co/100x60?text=iNews", streamUrls: { hd: "https://example.com/inews-hd", sd: "https://example.com/inews-sd", low: "https://example.com/inews-low" } },
+                { id: 5, name: "SCTV", category: "entertainment", logo: "https://placehold.co/100x60?text=SCTV", streamUrls: { hd: "https://example.com/sctv-hd", sd: "https://example.com/sctv-sd", low: "https://example.com/sctv-low" } },
+                { id: 6, name: "Indosiar", category: "entertainment", logo: "https://placehold.co/100x60?text=Indosiar", streamUrls: { hd: "https://example.com/indosiar-hd", sd: "https://example.com/indosiar-sd", low: "https://example.com/indosiar-low" } },
+                { id: 7, name: "ANTV", category: "entertainment", logo: "https://placehold.co/100x60?text=ANTV", streamUrls: { hd: "https://example.com/antv-hd", sd: "https://example.com/antv-sd", low: "https://example.com/antv-low" } },
+                { id: 8, name: "Trans TV", category: "entertainment", logo: "https://placehold.co/100x60?text=TransTV", streamUrls: { hd: "https://example.com/transtv-hd", sd: "https://example.com/transtv-sd", low: "https://example.com/transtv-low" } },
+                { id: 9, name: "Trans 7", category: "entertainment", logo: "https://placehold.co/100x60?text=Trans7", streamUrls: { hd: "https://example.com/trans7-hd", sd: "https://example.com/trans7-sd", low: "https://example.com/trans7-low" } },
+                { id: 10, name: "METRO TV", category: "news", logo: "https://placehold.co/100x60?text=METROTV", streamUrls: { hd: "https://example.com/metrotv-hd", sd: "https://example.com/metrotv-sd", low: "https://example.com/metrotv-low" } },
+                { id: 11, name: "TVRI", category: "entertainment", logo: "https://placehold.co/100x60?text=TVRI", streamUrls: { hd: "https://example.com/tvri-hd", sd: "https://example.com/tvri-sd", low: "https://example.com/tvri-low" } },
+                { id: 12, name: "Kompas TV", category: "news", logo: "https://placehold.co/100x60?text=KompasTV", streamUrls: { hd: "https://example.com/kompastv-hd", sd: "https://example.com/kompastv-sd", low: "https://example.com/kompastv-low" } },
+                { id: 13, name: "NET", category: "entertainment", logo: "https://placehold.co/100x60?text=NET", streamUrls: { hd: "https://example.com/net-hd", sd: "https://example.com/net-sd", low: "https://example.com/net-low" } },
+                { id: 14, name: "RTV", category: "entertainment", logo: "https://placehold.co/100x60?text=RTV", streamUrls: { hd: "https://example.com/rtv-hd", sd: "https://example.com/rtv-sd", low: "https://example.com/rtv-low" } },
+                { id: 15, name: "CNN Indonesia", category: "news", logo: "https://placehold.co/100x60?text=CNN", streamUrls: { hd: "https://example.com/cnn-hd", sd: "https://example.com/cnn-sd", low: "https://example.com/cnn-low" } },
+                { id: 16, name: "MNC Sports", category: "sports", logo: "https://placehold.co/100x60?text=MNC+Sports", streamUrls: { hd: "https://example.com/mncsports-hd", sd: "https://example.com/mncsports-sd", low: "https://example.com/mncsports-low" } },
+                { id: 17, name: "Moji", category: "kids", logo: "https://placehold.co/100x60?text=Moji", streamUrls: { hd: "https://example.com/moji-hd", sd: "https://example.com/moji-sd", low: "https://example.com/moji-low" } },
+                { id: 18, name: "Nickelodeon", category: "kids", logo: "https://placehold.co/100x60?text=Nickelodeon", streamUrls: { hd: "https://example.com/nick-hd", sd: "https://example.com/nick-sd", low: "https://example.com/nick-low" } },
+                { id: 19, name: "Cartoon Network", category: "kids", logo: "https://placehold.co/100x60?text=Cartoon+Network", streamUrls: { hd: "https://example.com/cartoon-hd", sd: "https://example.com/cartoon-sd", low: "https://example.com/cartoon-low" } }
+            ];
+
+            // DOM elements
+            const channelList = document.getElementById('channelList');
+            const playerFrame = document.getElementById('playerFrame');
+            const playerPlaceholder = document.getElementById('playerPlaceholder');
+            const selectedChannel = document.getElementById('selectedChannel');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const volumeBtn = document.getElementById('volumeBtn');
+            const volumeControl = document.getElementById('volumeControl');
+            const qualitySelector = document.getElementById('qualitySelector');
+            const qualityOptions = document.getElementById('qualityOptions');
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+
+            // Current selected channel
+            let currentChannel = null;
+            
+            // Initialize volume state
+            let isMuted = false;
+            let lastVolume = volumeControl.value;
+            
+            // Load channels function
+            function loadChannels(filter = 'all', searchQuery = '') {
+                loadingIndicator.classList.remove('hidden');
+                channelList.innerHTML = '';
+                
+                // Simulate API call delay
+                setTimeout(() => {
+                    loadingIndicator.classList.add('hidden');
+                    
+                    const filteredChannels = channels.filter(channel => {
+                        const matchesCategory = filter === 'all' || channel.category === filter;
+                        const matchesSearch = channel.name.toLowerCase().includes(searchQuery.toLowerCase());
+                        return matchesCategory && matchesSearch;
+                    });
+                    
+                    if (filteredChannels.length === 0) {
+                        channelList.innerHTML = `
+                            <div class="col-span-full text-center py-8 text-slate-400">
+                                Tidak ada channel yang ditemukan
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    filteredChannels.forEach(channel => {
+                        const channelCard = document.createElement('div');
+                        channelCard.className = 'channel-card p-3 rounded-lg cursor-pointer transition-all';
+                        channelCard.dataset.id = channel.id;
+                        channelCard.dataset.category = channel.category;
+                        
+                        if (currentChannel && currentChannel.id === channel.id) {
+                            channelCard.classList.add('selected');
+                        }
+                        
+                        channelCard.innerHTML = `
+                            <div class="flex flex-col items-center">
+                                <img src="${channel.logo}" alt="Logo ${channel.name}" class="h-12 mb-2" />
+                                <p class="text-sm font-medium text-center">${channel.name}</p>
+                                <span class="mt-1 text-xs text-slate-400 capitalize">${channel.category}</span>
+                            </div>
+                        `;
+                        
+                        channelCard.addEventListener('click', () => {
+                            selectChannel(channel);
+                            
+                            // Update UI for selected card
+                            document.querySelectorAll('.channel-card').forEach(card => {
+                                card.classList.remove('selected');
+                            });
+                            channelCard.classList.add('selected');
+                        });
+                        
+                        channelList.appendChild(channelCard);
+                    });
+                }, 800);
+            }
+            
+            // Select channel function
+            function selectChannel(channel) {
+                currentChannel = channel;
+                selectedChannel.textContent = `Sedang diputar: ${channel.name}`;
+                playerPlaceholder.classList.add('hidden');
+                qualitySelector.classList.remove('hidden');
+                
+                // In a real app, this would be the actual streaming URL
+                const quality = qualityOptions.value;
+                playerFrame.src = channel.streamUrls[quality];
+            }
+            
+            // Fullscreen function
+            function toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                    });
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                }
+            }
+            
+            // Toggle volume function
+            function toggleVolume() {
+                isMuted = !isMuted;
+                
+                if (isMuted) {
+                    lastVolume = volumeControl.value;
+                    volumeControl.value = 0;
+                    volumeBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                        </svg>
+                    `;
+                } else {
+                    volumeControl.value = lastVolume;
+                    volumeBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6a7.975 7.975 0 015.657 2.343m0 0a7.975 7.975 0 010 11.314m-11.314 0a7.975 7.975 0 010-11.314m0 0a7.975 7.975 0 015.657-2.343" />
+                        </svg>
+                    `;
+                }
+            }
+            
+            // Event listeners
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+            volumeBtn.addEventListener('click', toggleVolume);
+            
+            volumeControl.addEventListener('input', () => {
+                if (volumeControl.value > 0) {
+                    isMuted = false;
+                    volumeBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6a7.975 7.975 0 015.657 2.343m0 0a7.975 7.975 0 010 11.314m-11.314 0a7.975 7.975 0 010-11.314m0 0a7.975 7.975 0 015.657-2.343" />
+                        </svg>
+                    `;
+                }
+                // In a real player, you would adjust the volume here
+            });
+            
+            qualityOptions.addEventListener('change', () => {
+                if (currentChannel) {
+                    selectChannel(currentChannel);
+                }
+            });
+            
+            // Category tabs
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const category = tab.dataset.category;
+                    
+                    // Update active tab
+                    categoryTabs.forEach(t => {
+                        t.classList.remove('bg-blue-600');
+                        t.classList.add('bg-slate-700');
+                    });
+                    tab.classList.remove('bg-slate-700');
+                    tab.classList.add('bg-blue-600');
+                    
+                    // Load channels for selected category
+                    loadChannels(category);
+                });
+            });
+            
+            // Search functionality
+            function performSearch() {
+                const query = searchInput.value.trim();
+                const activeTab = document.querySelector('.category-tab.bg-blue-600');
+                const category = activeTab ? activeTab.dataset.category : 'all';
+                loadChannels(category, query);
+            }
+            
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // Initial load
+            loadChannels();
+        });
+    </script>
 </body>
 </html>
