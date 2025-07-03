@@ -1,385 +1,398 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV Online Player</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --dark: #1e293b;
-            --light: #f8fafc;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--dark);
-            color: var(--light);
-        }
-        
-        .channel-card {
-            transition: all 0.3s ease;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .channel-card:hover {
-            transform: translateY(-5px);
-            background: rgba(30, 41, 59, 1);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-        }
-        
-        .player-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            height: 0;
-            overflow: hidden;
-        }
-        
-        .player-iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
-        .selected {
-            border: 2px solid var(--primary);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.3);
-        }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--light);
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        #searchInput::placeholder {
-            color: #94a3b8;
-        }
-        
-        @media (max-width: 640px) {
-            .channel-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>TV Streaming Indonesia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind for styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .channel-active {
+      background: rgba(34, 197, 94, 0.10);
+      border-color: #22c55e;
+      color: #22c55e;
+    }
+    .channel-offline {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+    .category-selected {
+      border-bottom: 2px solid #0ea5e9;
+      color: #0ea5e9;
+    }
+    .category-button:hover {
+      color: #0369a1;
+    }
+    .logo-fallback {
+      background: linear-gradient(135deg, #e2e8f0 0%, #f8fafc 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 1.6rem;
+      font-weight: bold;
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+    }
+  </style>
 </head>
-<body class="min-h-screen">
-    <!-- Header Section -->
-    <header class="bg-slate-800 shadow-lg sticky top-0 z-10">
-        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
-            <div class="flex items-center mb-4 md:mb-0">
-                <img src="https://placehold.co/50x50" alt="Logo TV Online berwarna biru dengan ikon layar TV" class="mr-3 rounded-full" />
-                <h1 class="text-2xl font-bold text-blue-400">TV<span class="text-white">Online</span></h1>
-            </div>
-            
-            <div class="relative w-full md:w-64">
-                <input type="text" id="searchInput" placeholder="Cari channel..." 
-                    class="w-full bg-slate-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button id="searchBtn" class="absolute right-2 top-2 text-slate-400 hover:text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </button>
-            </div>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="bg-white shadow sticky top-0 z-30">
+    <div class="container mx-auto px-4 py-5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="rounded-lg overflow-hidden shadow">
+          <img 
+            src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/caa1ef10-2147-4f51-8947-8b39a522257e.png" 
+            alt="Logo website TV Streaming, gaya flat, biru muda, dengan teks TV, latar belakang putih, desain sederhana" 
+            class="w-12 h-12"
+            onerror="this.style.display='none';this.parentNode.insertAdjacentHTML('beforeend','<span class=\'logo-fallback\'>TV</span>')"
+          />
         </div>
-    </header>
+        <span class="font-bold text-2xl text-blue-600">TV Streaming ID</span>
+      </div>
+      <nav>
+        <span class="text-sm text-gray-500">Siaran TV Indonesia & Internasional</span>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <!-- Player Section -->
-        <section class="mb-8 relative">
-            <div id="selectedChannel" class="text-lg font-semibold mb-2 text-blue-300">Pilih channel untuk memulai</div>
-            
-            <div class="player-container bg-black rounded-lg shadow-2xl overflow-hidden">
-                <iframe id="playerFrame" class="player-iframe" allowfullscreen></iframe>
-                
-                <div id="playerPlaceholder" class="absolute inset-0 flex items-center justify-center bg-black">
-                    <div class="text-center px-4">
-                        <img src="https://placehold.co/300x150" alt="Layar TV kosong dengan warna gelap dan watermark TV Online di tengah" class="mx-auto mb-4 opacity-50" />
-                        <p class="text-slate-400">Pilih channel dari daftar di bawah ini untuk memulai streaming</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="flex items-center justify-between mt-4">
-                <div class="flex items-center space-x-4">
-                    <button id="fullscreenBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-                        Layar Penuh
-                    </button>
-                    <button id="volumeBtn" class="text-slate-400 hover:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6a7.975 7.975 0 015.657 2.343m0 0a7.975 7.975 0 010 11.314m-11.314 0a7.975 7.975 0 010-11.314m0 0a7.975 7.975 0 015.657-2.343" />
-                        </svg>
-                    </button>
-                    <input type="range" id="volumeControl" min="0" max="100" value="50" 
-                        class="w-20 accent-blue-500 bg-slate-700 rounded-lg h-1.5">
-                </div>
-                
-                <div id="qualitySelector" class="hidden">
-                    <label for="qualityOptions" class="text-slate-400 mr-2">Kualitas:</label>
-                    <select id="qualityOptions" class="bg-slate-700 text-white px-2 py-1 rounded focus:outline-none focus:ring-1 focus:ring-blue-500">
-                        <option value="hd">HD</option>
-                        <option value="sd" selected>SD</option>
-                        <option value="low">Rendah</option>
-                    </select>
-                </div>
-            </div>
-        </section>
-
-        <!-- Channel List Section -->
-        <section>
-            <h2 class="text-xl font-bold mb-4 text-blue-300 border-b border-slate-700 pb-2">Daftar Channel TV</h2>
-            
-            <div id="categoryTabs" class="flex space-x-2 mb-6 overflow-x-auto pb-2">
-                <button class="category-tab px-4 py-2 rounded-full font-medium whitespace-nowrap bg-blue-600 text-white" data-category="all">Semua</button>
-                <button class="category-tab px-4 py-2 rounded-full font-medium whitespace-nowrap bg-slate-700 hover:bg-slate-600 text-white" data-category="news">Berita</button>
-                <button class="category-tab px-4 py-2 rounded-full font-medium whitespace-nowrap bg-slate-700 hover:bg-slate-600 text-white" data-category="entertainment">Hiburan</button>
-                <button class="category-tab px-4 py-2 rounded-full font-medium whitespace-nowrap bg-slate-700 hover:bg-slate-600 text-white" data-category="sports">Olahraga</button>
-                <button class="category-tab px-4 py-2 rounded-full font-medium whitespace-nowrap bg-slate-700 hover:bg-slate-600 text-white" data-category="kids">Anak-anak</button>
-            </div>
-            
-            <div id="channelList" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                <!-- Channels will be loaded here -->
-            </div>
-            
-            <div id="loadingIndicator" class="text-center py-8 hidden">
-                <div class="loading inline-block"></div>
-                <span class="ml-2 text-slate-400">Memuat channel...</span>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-slate-800 py-6 mt-12">
-        <div class="container mx-auto px-4 text-center text-slate-400">
-            <p>&copy; 2023 TV Online. Semua hak dilindungi.</p>
-            <p class="mt-2 text-sm">Streaming dengan kualitas terbaik. Untuk hiburan keluarga Anda.</p>
+  <!-- Main Content -->
+  <main class="flex-1 container mx-auto px-3 py-6 flex flex-col lg:flex-row gap-8">
+    <!-- Player Section -->
+    <section class="flex-1 flex flex-col items-center">
+      <div class="bg-black rounded-xl w-full aspect-video flex items-center justify-center shadow mb-3 relative">
+        <video id="tv-player" autoplay playsinline poster="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/12929421-b8b3-4f22-b22d-c1916c31e301.png" class="w-full h-full object-cover rounded-xl"></video>
+        <div id="player-loading" class="absolute inset-0 flex items-center justify-center" style="display:none;">
+          <div class="border-4 border-blue-400 border-t-transparent animate-spin rounded-full w-12 h-12"></div>
         </div>
-    </footer>
+      </div>
+      <!-- Player Controls -->
+      <div class="flex gap-2 mt-2 w-full justify-start">
+        <button id="btn-fs" class="bg-white/80 border text-gray-800 px-3 py-1 rounded shadow hover:bg-blue-100 transition font-semibold text-sm" title="Full screen">Full Layar</button>
+        <button id="btn-mute" class="bg-white/80 border text-gray-800 px-3 py-1 rounded shadow hover:bg-blue-100 transition font-semibold text-sm" title="Mute/Unmute">Unmute</button>
+        <select id="btn-res" class="bg-white/80 border text-gray-800 px-3 py-1 rounded shadow hover:bg-blue-100 transition font-semibold text-sm hidden"></select>
+      </div>
+      <div id="current-channel-info" class="mt-2 text-center">
+        <h2 class="text-xl font-semibold text-gray-800" id="currentChannelName">Pilih channel TV untuk mulai streaming</h2>
+        <span class="inline-block mt-1 px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-500" id="currentChannelStatus"></span>
+      </div>
+    </section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mock channel data (in a real app, this would come from an API)
-            const channels = [
-                { id: 1, name: "RCTI", category: "entertainment", logo: "https://placehold.co/100x60?text=RCTI", streamUrls: { hd: "Bein1-1080.html", sd: "https://example.com/rcti-sd", low: "https://example.com/rcti-low" } },
-                { id: 2, name: "MNCTV", category: "entertainment", logo: "https://placehold.co/100x60?text=MNCTV", streamUrls: { hd: "https://example.com/mnctv-hd", sd: "https://example.com/mnctv-sd", low: "https://example.com/mnctv-low" } },
-                { id: 3, name: "GTV", category: "entertainment", logo: "https://placehold.co/100x60?text=GTV", streamUrls: { hd: "https://example.com/gtv-hd", sd: "https://example.com/gtv-sd", low: "https://example.com/gtv-low" } },
-                { id: 4, name: "iNews", category: "news", logo: "https://placehold.co/100x60?text=iNews", streamUrls: { hd: "https://example.com/inews-hd", sd: "https://example.com/inews-sd", low: "https://example.com/inews-low" } },
-                { id: 5, name: "SCTV", category: "entertainment", logo: "https://placehold.co/100x60?text=SCTV", streamUrls: { hd: "https://example.com/sctv-hd", sd: "https://example.com/sctv-sd", low: "https://example.com/sctv-low" } },
-                { id: 6, name: "Indosiar", category: "entertainment", logo: "https://placehold.co/100x60?text=Indosiar", streamUrls: { hd: "https://example.com/indosiar-hd", sd: "https://example.com/indosiar-sd", low: "https://example.com/indosiar-low" } },
-                { id: 7, name: "ANTV", category: "entertainment", logo: "https://placehold.co/100x60?text=ANTV", streamUrls: { hd: "https://example.com/antv-hd", sd: "https://example.com/antv-sd", low: "https://example.com/antv-low" } },
-                { id: 8, name: "Trans TV", category: "entertainment", logo: "https://placehold.co/100x60?text=TransTV", streamUrls: { hd: "https://example.com/transtv-hd", sd: "https://example.com/transtv-sd", low: "https://example.com/transtv-low" } },
-                { id: 9, name: "Trans 7", category: "entertainment", logo: "https://placehold.co/100x60?text=Trans7", streamUrls: { hd: "https://example.com/trans7-hd", sd: "https://example.com/trans7-sd", low: "https://example.com/trans7-low" } },
-                { id: 10, name: "METRO TV", category: "news", logo: "https://placehold.co/100x60?text=METROTV", streamUrls: { hd: "https://example.com/metrotv-hd", sd: "https://example.com/metrotv-sd", low: "https://example.com/metrotv-low" } },
-                { id: 11, name: "TVRI", category: "entertainment", logo: "https://placehold.co/100x60?text=TVRI", streamUrls: { hd: "https://example.com/tvri-hd", sd: "https://example.com/tvri-sd", low: "https://example.com/tvri-low" } },
-                { id: 12, name: "Kompas TV", category: "news", logo: "https://placehold.co/100x60?text=KompasTV", streamUrls: { hd: "https://example.com/kompastv-hd", sd: "https://example.com/kompastv-sd", low: "https://example.com/kompastv-low" } },
-                { id: 13, name: "NET", category: "entertainment", logo: "https://placehold.co/100x60?text=NET", streamUrls: { hd: "https://example.com/net-hd", sd: "https://example.com/net-sd", low: "https://example.com/net-low" } },
-                { id: 14, name: "RTV", category: "entertainment", logo: "https://placehold.co/100x60?text=RTV", streamUrls: { hd: "https://example.com/rtv-hd", sd: "https://example.com/rtv-sd", low: "https://example.com/rtv-low" } },
-                { id: 15, name: "CNN Indonesia", category: "news", logo: "https://placehold.co/100x60?text=CNN", streamUrls: { hd: "https://example.com/cnn-hd", sd: "https://example.com/cnn-sd", low: "https://example.com/cnn-low" } },
-                { id: 16, name: "MNC Sports", category: "sports", logo: "https://placehold.co/100x60?text=MNC+Sports", streamUrls: { hd: "https://example.com/mncsports-hd", sd: "https://example.com/mncsports-sd", low: "https://example.com/mncsports-low" } },
-                { id: 17, name: "Moji", category: "kids", logo: "https://placehold.co/100x60?text=Moji", streamUrls: { hd: "https://example.com/moji-hd", sd: "https://example.com/moji-sd", low: "https://example.com/moji-low" } },
-                { id: 18, name: "Nickelodeon", category: "kids", logo: "https://placehold.co/100x60?text=Nickelodeon", streamUrls: { hd: "https://example.com/nick-hd", sd: "https://example.com/nick-sd", low: "https://example.com/nick-low" } },
-                { id: 19, name: "Cartoon Network", category: "kids", logo: "https://placehold.co/100x60?text=Cartoon+Network", streamUrls: { hd: "https://example.com/cartoon-hd", sd: "https://example.com/cartoon-sd", low: "https://example.com/cartoon-low" } }
-            ];
+    <!-- Channel List Section -->
+    <aside class="w-full lg:w-96 bg-white rounded-xl shadow flex flex-col p-4 space-y-4">
+      <!-- Categories -->
+      <div id="category-filter" class="flex flex-wrap gap-2 border-b pb-2 justify-start items-center">
+        <!-- Category buttons inserted here -->
+      </div>
 
-            // DOM elements
-            const channelList = document.getElementById('channelList');
-            const playerFrame = document.getElementById('playerFrame');
-            const playerPlaceholder = document.getElementById('playerPlaceholder');
-            const selectedChannel = document.getElementById('selectedChannel');
-            const fullscreenBtn = document.getElementById('fullscreenBtn');
-            const volumeBtn = document.getElementById('volumeBtn');
-            const volumeControl = document.getElementById('volumeControl');
-            const qualitySelector = document.getElementById('qualitySelector');
-            const qualityOptions = document.getElementById('qualityOptions');
-            const categoryTabs = document.querySelectorAll('.category-tab');
-            const searchInput = document.getElementById('searchInput');
-            const searchBtn = document.getElementById('searchBtn');
-            const loadingIndicator = document.getElementById('loadingIndicator');
+      <!-- Channel List -->
+      <div id="channel-list" class="space-y-3 max-h-[70vh] overflow-y-auto pt-1">
+        <!-- Channel items inserted here by JS -->
+      </div>
+    </aside>
+  </main>
 
-            // Current selected channel
-            let currentChannel = null;
-            
-            // Initialize volume state
-            let isMuted = false;
-            let lastVolume = volumeControl.value;
-            
-            // Load channels function
-            function loadChannels(filter = 'all', searchQuery = '') {
-                loadingIndicator.classList.remove('hidden');
-                channelList.innerHTML = '';
-                
-                // Simulate API call delay
-                setTimeout(() => {
-                    loadingIndicator.classList.add('hidden');
-                    
-                    const filteredChannels = channels.filter(channel => {
-                        const matchesCategory = filter === 'all' || channel.category === filter;
-                        const matchesSearch = channel.name.toLowerCase().includes(searchQuery.toLowerCase());
-                        return matchesCategory && matchesSearch;
-                    });
-                    
-                    if (filteredChannels.length === 0) {
-                        channelList.innerHTML = `
-                            <div class="col-span-full text-center py-8 text-slate-400">
-                                Tidak ada channel yang ditemukan
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    filteredChannels.forEach(channel => {
-                        const channelCard = document.createElement('div');
-                        channelCard.className = 'channel-card p-3 rounded-lg cursor-pointer transition-all';
-                        channelCard.dataset.id = channel.id;
-                        channelCard.dataset.category = channel.category;
-                        
-                        if (currentChannel && currentChannel.id === channel.id) {
-                            channelCard.classList.add('selected');
-                        }
-                        
-                        channelCard.innerHTML = `
-                            <div class="flex flex-col items-center">
-                                <img src="${channel.logo}" alt="Logo ${channel.name}" class="h-12 mb-2" />
-                                <p class="text-sm font-medium text-center">${channel.name}</p>
-                                <span class="mt-1 text-xs text-slate-400 capitalize">${channel.category}</span>
-                            </div>
-                        `;
-                        
-                        channelCard.addEventListener('click', () => {
-                            selectChannel(channel);
-                            
-                            // Update UI for selected card
-                            document.querySelectorAll('.channel-card').forEach(card => {
-                                card.classList.remove('selected');
-                            });
-                            channelCard.classList.add('selected');
-                        });
-                        
-                        channelList.appendChild(channelCard);
-                    });
-                }, 800);
+  <!-- Footer -->
+  <footer class="text-center text-xs text-gray-400 py-5">
+    © 2024 TV Streaming ID. All rights reserved.
+  </footer>
+
+  <script>
+    // Dummy TV channel data
+    const CHANNELS = [
+      {
+        name: "TVRI Nasional",
+        stream: [
+          {label:"AUTO",url:"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"},
+          {label:"360p",url:"https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"}
+        ],
+        online: true,
+        category: "Indonesia"
+      },
+      {
+        name: "Example MultiRes",
+        stream: [
+          {label:"AUTO",url:"https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8"},
+          {label:"480p",url:"https://test-streams.mux.dev/dai-discontinuity-daterange/will_play.m3u8"}
+        ],
+        online: true,
+        category: "International"
+      },
+      {
+        name: "Big Buck Bunny",
+        stream: [
+          {label:"AUTO",url:"https://test-streams.mux.dev/bbb_720p/bbb_720p.m3u8"},
+          {label:"720p",url:"https://test-streams.mux.dev/bbb_720p/bbb_720p.m3u8"},
+          {label:"480p",url:"https://test-streams.mux.dev/bbb_480p/bbb_480p.m3u8"}
+        ],
+        online: true,
+        category: "Film"
+      },
+      {
+        name: "RCTI",
+        stream: [
+          {label:"AUTO",url:"https://www.antareksacool.my.id/Bein1-1080.html"}
+        ],
+        online: true,
+        category: "Indonesia"
+      },
+      {
+        name: "NASA TV",
+        stream: [
+          {label:"AUTO",url:"https://stviptv.my.id/st12/hls.php/stream.m3u8?id=205"}
+        ],
+        online: true,
+        category: "International"
+      },
+      {
+        name: "Metro TV",
+        stream: [
+          {label:"AUTO",url:"https://content.jwplatform.com/manifests/yp34SRmf.m3u8"}
+        ],
+        online: false,
+        category: "Berita"
+      },
+      {
+        name: "CNN Indonesia",
+        stream: [
+          {label:"AUTO",url:"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
+        ],
+        online: true,
+        category: "Berita"
+      },
+      {
+        name: "Space Toon",
+        stream: [
+          {label:"AUTO",url:"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
+        ],
+        online: false,
+        category: "Anak-anak"
+      },
+      {
+        name: "Fashion TV",
+        stream: [
+          {label:"AUTO",url:"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
+        ],
+        online: true,
+        category: "International"
+      }
+    ];
+
+    // Category generation
+    const CATEGORIES = ["Semua", ...Array.from(new Set(CHANNELS.map(ch => ch.category)))];
+
+    let currentCategory = "Semua";
+    let currentChannel = null;
+
+    function renderCategories() {
+      const container = document.getElementById('category-filter');
+      container.innerHTML = '';
+      CATEGORIES.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'px-4 py-1 mb-1 rounded-full category-button text-sm font-medium select-none focus:outline-none transition ' +
+          (cat === currentCategory ? 'category-selected bg-blue-50 shadow' : 'text-gray-700 hover:text-sky-600 bg-gray-50');
+        btn.textContent = cat;
+        btn.onclick = () => {
+          currentCategory = cat;
+          renderCategories();
+          renderChannelList();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function renderChannelList() {
+      const list = document.getElementById('channel-list');
+      list.innerHTML = '';
+      let channels = CHANNELS.filter(c => (currentCategory === "Semua" || c.category === currentCategory));
+      if (channels.length === 0) {
+        list.innerHTML = '<div class="text-gray-500 p-3 text-center">Tidak ada channel untuk kategori ini.</div>';
+        return;
+      }
+      channels.forEach(channel => {
+        const card = document.createElement('div');
+        card.className = 'flex items-center px-2 py-3 gap-3 rounded-lg border shadow-sm cursor-pointer hover:bg-blue-50 transition';
+        card.tabIndex = 0;
+        card.onclick = () => selectChannel(channel, 0);
+        card.onkeypress = e => { if (e.key === 'Enter') { selectChannel(channel, 0); } };
+        if (currentChannel && channel.name === currentChannel.name) {
+          card.classList.add('ring-2', 'ring-sky-400');
+        }
+        // Channel detail
+        const detail = document.createElement('div');
+        detail.className = 'flex-1 min-w-0';
+        const title = document.createElement('div');
+        title.textContent = channel.name;
+        title.className = 'font-bold text-xl text-gray-800 truncate';
+        const categ = document.createElement('div');
+        categ.textContent = channel.category;
+        categ.className = 'text-sm text-gray-500';
+        detail.appendChild(title);
+        detail.appendChild(categ);
+
+        // Status
+        const status = document.createElement('span');
+        status.textContent = channel.online ? 'Online' : 'Offline';
+        status.className = 'text-xs rounded-full px-2 py-1 border font-semibold ml-3 ' +
+          (channel.online ? 'channel-active' : 'channel-offline');
+
+        card.appendChild(detail);
+        card.appendChild(status);
+
+        list.appendChild(card);
+      });
+    }
+
+    function selectChannel(channel, resolutionIdx) {
+      currentChannel = channel;
+      const player = document.getElementById('tv-player');
+      // Remove all old sources, we do src programmatically
+      player.pause();
+      player.removeAttribute("src");
+      player.innerHTML = '';
+      document.getElementById('player-loading').style.display = '';
+      // Multi-res support
+      let idx = typeof resolutionIdx === "number" ? resolutionIdx : 0;
+      if (!Array.isArray(channel.stream)) {
+        // Backward compatible
+        channel.stream = [{ label: 'AUTO', url: channel.stream }];
+        idx = 0;
+      }
+      let url = channel.online ? channel.stream[idx].url : "";
+      if (channel.online && window.Hls && !player.canPlayType('application/vnd.apple.mpegurl')) {
+        // Using hls.js for maximum compatibility
+        if (window._hls) { window._hls.destroy(); }
+        window._hls = new Hls();
+        window._hls.loadSource(url);
+        window._hls.attachMedia(player);
+        window._hls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
+          document.getElementById('player-loading').style.display = 'none';
+          if (data && data.levels) {
+            // Manage resolutions
+            const sel = document.getElementById('btn-res');
+            sel.innerHTML = '';
+            let foundLevel = false;
+            if (channel.stream.length > 1) {
+              channel.stream.forEach((x, i) => {
+                const opt = document.createElement('option');
+                opt.value = 'custom-' + i;
+                opt.textContent = x.label;
+                if (i === idx) opt.selected = true;
+                sel.appendChild(opt);
+              });
+              foundLevel = true;
             }
-            
-            // Select channel function
-            function selectChannel(channel) {
-                currentChannel = channel;
-                selectedChannel.textContent = `Sedang diputar: ${channel.name}`;
-                playerPlaceholder.classList.add('hidden');
-                qualitySelector.classList.remove('hidden');
-                
-                // In a real app, this would be the actual streaming URL
-                const quality = qualityOptions.value;
-                playerFrame.src = channel.streamUrls[quality];
+            if (data.levels.length > 1) {
+              // Show levels
+              data.levels.forEach((level, i) => {
+                let label = `${level.height}p`;
+                if (!Array.from(sel.options).some(o => o.textContent == label)) {
+                  const opt = document.createElement('option');
+                  opt.value = '' + i;
+                  opt.textContent = label;
+                  sel.appendChild(opt);
+                }
+              });
+              foundLevel = true;
             }
-            
-            // Fullscreen function
-            function toggleFullscreen() {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(err => {
-                        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-                    });
-                } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    }
-                }
-            }
-            
-            // Toggle volume function
-            function toggleVolume() {
-                isMuted = !isMuted;
-                
-                if (isMuted) {
-                    lastVolume = volumeControl.value;
-                    volumeControl.value = 0;
-                    volumeBtn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                        </svg>
-                    `;
-                } else {
-                    volumeControl.value = lastVolume;
-                    volumeBtn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6a7.975 7.975 0 015.657 2.343m0 0a7.975 7.975 0 010 11.314m-11.314 0a7.975 7.975 0 010-11.314m0 0a7.975 7.975 0 015.657-2.343" />
-                        </svg>
-                    `;
-                }
-            }
-            
-            // Event listeners
-            fullscreenBtn.addEventListener('click', toggleFullscreen);
-            volumeBtn.addEventListener('click', toggleVolume);
-            
-            volumeControl.addEventListener('input', () => {
-                if (volumeControl.value > 0) {
-                    isMuted = false;
-                    volumeBtn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6a7.975 7.975 0 015.657 2.343m0 0a7.975 7.975 0 010 11.314m-11.314 0a7.975 7.975 0 010-11.314m0 0a7.975 7.975 0 015.657-2.343" />
-                        </svg>
-                    `;
-                }
-                // In a real player, you would adjust the volume here
-            });
-            
-            qualityOptions.addEventListener('change', () => {
-                if (currentChannel) {
-                    selectChannel(currentChannel);
-                }
-            });
-            
-            // Category tabs
-            categoryTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const category = tab.dataset.category;
-                    
-                    // Update active tab
-                    categoryTabs.forEach(t => {
-                        t.classList.remove('bg-blue-600');
-                        t.classList.add('bg-slate-700');
-                    });
-                    tab.classList.remove('bg-slate-700');
-                    tab.classList.add('bg-blue-600');
-                    
-                    // Load channels for selected category
-                    loadChannels(category);
-                });
-            });
-            
-            // Search functionality
-            function performSearch() {
-                const query = searchInput.value.trim();
-                const activeTab = document.querySelector('.category-tab.bg-blue-600');
-                const category = activeTab ? activeTab.dataset.category : 'all';
-                loadChannels(category, query);
-            }
-            
-            searchBtn.addEventListener('click', performSearch);
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
-            });
-            
-            // Initial load
-            loadChannels();
+            sel.style.display = foundLevel ? '' : 'none';
+            sel.classList.toggle("hidden", !foundLevel);
+          }
         });
-    </script>
+      } else if (channel.online) {
+        player.src = url;
+        setTimeout(() => document.getElementById('player-loading').style.display = 'none', 500);
+      } else {
+        player.removeAttribute("src");
+        player.load();
+      }
+      // Info
+      document.getElementById('currentChannelName').textContent = channel.name;
+      document.getElementById('currentChannelStatus').textContent = channel.online ? 'Online' : 'Offline';
+      document.getElementById('currentChannelStatus').className = 'inline-block mt-1 px-2 py-1 text-xs rounded-full font-semibold ' + (channel.online ? 'channel-active' : 'channel-offline');
+      renderChannelList();
+      // Setup resolution select
+      const resSelect = document.getElementById('btn-res');
+      resSelect.innerHTML = '';
+      if (channel.stream.length > 1) {
+        channel.stream.forEach((x, i) => {
+          const opt = document.createElement('option');
+          opt.value = 'custom-' + i;
+          opt.textContent = x.label;
+          if (i === idx) opt.selected = true;
+          resSelect.appendChild(opt);
+        });
+        resSelect.style.display = '';
+        resSelect.classList.remove("hidden");
+      } else {
+        resSelect.style.display = 'none';
+        resSelect.classList.add("hidden");
+      }
+      resSelect.onchange = function() {
+        const val = this.value;
+        if (val.startsWith("custom-")) {
+          let i = parseInt(val.replace('custom-', ''));
+          selectChannel(channel, i);
+        } else if (window._hls && !isNaN(val)) {
+          _hls.currentLevel = parseInt(val);
+        }
+      }
+      // reset mute button
+      const muteBtn = document.getElementById('btn-mute');
+      muteBtn.textContent = player.muted ? 'Unmute' : 'Mute';
+      // Only play if online
+      if (channel.online && player.paused) player.play().catch(() => { });
+    }
+
+    // Initialize everything after DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!window.Hls) {
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/hls.js@latest';
+        document.head.appendChild(s);
+      }
+      renderCategories();
+      renderChannelList();
+
+      // Mute button functionality
+      document.getElementById('btn-mute').onclick = () => {
+        const player = document.getElementById('tv-player');
+        player.muted = !player.muted;
+        document.getElementById('btn-mute').textContent = player.muted ? 'Unmute' : 'Mute';
+      };
+
+      // Set up player events
+      const player = document.getElementById('tv-player');
+      
+      // Fullscreen button functionality
+      document.getElementById('btn-fs').onclick = () => {
+        if (player.requestFullscreen) {
+          player.requestFullscreen();
+        } else if (player.webkitRequestFullscreen) {
+          player.webkitRequestFullscreen();
+        } else if (player.msRequestFullscreen) {
+          player.msRequestFullscreen();
+        }
+      };
+      player.addEventListener('waiting', () => {
+        document.getElementById('player-loading').style.display = '';
+      });
+      player.addEventListener('playing', () => {
+        document.getElementById('player-loading').style.display = 'none';
+      });
+      player.addEventListener('canplay', () => {
+        document.getElementById('player-loading').style.display = 'none';
+      });
+      player.addEventListener('error', () => {
+        document.getElementById('player-loading').style.display = 'none';
+        if (currentChannel && currentChannel.online)
+          alert('Maaf, channel gagal dimuat. Coba channel lain.');
+      });
+    });
+
+  </script>
 </body>
 </html>
