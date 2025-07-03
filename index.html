@@ -70,10 +70,10 @@
         </div>
       </div>
       <!-- Player Controls -->
-      <div class="flex gap-2 mt-2 w-full justify-start">
-        <button id="btn-fs" class="bg-white/80 border text-gray-800 px-3 py-1 rounded shadow hover:bg-blue-100 transition font-semibold text-sm" title="Full screen">Full Layar</button>
-        <button id="btn-mute" class="bg-white/80 border text-gray-800 px-3 py-1 rounded shadow hover:bg-blue-100 transition font-semibold text-sm" title="Mute/Unmute">Unmute</button>
-        <select id="btn-res" class="bg-white/80 border text-gray-800 px-3 py-1 rounded shadow hover:bg-blue-100 transition font-semibold text-sm hidden"></select>
+      <div class="flex flex-col gap-2 mt-2 w-full justify-start sm:flex-row">
+        <button id="btn-fs" class="bg-white/80 border text-gray-800 px-4 py-2 rounded shadow hover:bg-blue-100 transition font-semibold text-sm w-full sm:w-auto">Full Layar</button>
+        <button id="btn-mute" class="bg-white/80 border text-gray-800 px-4 py-2 rounded shadow hover:bg-blue-100 transition font-semibold text-sm w-full sm:w-auto">Unmute</button>
+        <select id="btn-res" class="bg-white/80 border text-gray-800 px-4 py-2 rounded shadow hover:bg-blue-100 transition font-semibold text-sm hidden w-full sm:w-auto"></select>
       </div>
       <div id="current-channel-info" class="mt-2 text-center">
         <h2 class="text-xl font-semibold text-gray-800" id="currentChannelName">Pilih channel TV untuk mulai streaming</h2>
@@ -134,7 +134,7 @@
       {
         name: "RCTI",
         stream: [
-          {label:"AUTO",url:"https://wo.cma.footballii.ir/hls2/b1_src.m3u8"}
+          {label:"AUTO",url:"https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"}
         ],
         online: true,
         category: "Indonesia"
@@ -142,7 +142,7 @@
       {
         name: "NASA TV",
         stream: [
-          {label:"AUTO",url:"https://stviptv.my.id/st12/hls.php/stream.m3u8?id=205"}
+          {label:"AUTO",url:"https://nasatv-lh.akamaihd.net/i/NASA_101@319270/master.m3u8"}
         ],
         online: true,
         category: "International"
