@@ -3,827 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamTV - Live TV Streaming</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <title>Data Anak Yatim</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: #ffffff;
-            overflow-x: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
         }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
         }
-
-        .header {
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
             text-align: center;
-            margin-bottom: 30px;
-            padding: 20px 0;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
         }
-
-        .header h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 30px;
-        }
-
-        .player-section {
-            background: transparent;
-            border-radius: 0;
-            padding: 20px 0;
-            backdrop-filter: none;
-            border: none;
-        }
-
-        .player-container {
-            position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            background: transparent;
-            border-radius: 0;
-            overflow: hidden;
-            box-shadow: none;
-        }
-
-        .player-container iframe,
-        .player-container video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 0;
-        }
-
-        .player-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(255, 255, 255, 0.2));
-            padding: 10px 20px;
-            border-radius: 0;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        .channel-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 0;
-        }
-
-        .live-indicator {
-            width: 12px;
-            height: 12px;
-            background: #00ff88;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-            box-shadow: 0 0 10px #00ff88;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
-        }
-
-        .channel-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-        }
-
-        .external-controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-        }
-
-        .control-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
+        th {
+            background-color: #4CAF50;
             color: white;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+        h1, h2, h3 {
+            text-align: center;  /* Centering the headings */
         }
-
-        .resolution-dropdown {
-            position: relative;
-        }
-
-        .resolution-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            padding: 10px;
-            min-width: 120px;
-            display: none;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .resolution-menu.show {
-            display: block;
-        }
-
-        .resolution-option {
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background 0.2s;
-            font-size: 14px;
-        }
-
-        .resolution-option:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .resolution-option.active {
-            background: rgba(255, 255, 255, 0.3);
-            color: #00ff88;
-        }
-
-        .channels-section {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .channels-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #4ecdc4;
-        }
-
-        .channel-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .channel-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .channel-item:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(5px);
-        }
-
-        .channel-item.active {
-            border-color: #4ecdc4;
-            background: rgba(78, 205, 196, 0.2);
-            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
-        }
-
-        .channel-logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .channel-details {
-            flex: 1;
-        }
-
-        .channel-details h3 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-            color: #ffffff;
-        }
-
-        .channel-details p {
-            font-size: 0.9rem;
-            color: #b0b0b0;
-        }
-
-        .status-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #00ff88;
-            animation: pulse 2s infinite;
-        }
-
-        .error-message {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.15);
-            color: #ff6b6b;
-            font-size: 1.2rem;
-            text-align: center;
-            border-radius: 0;
-            padding: 20px;
-        }
-
-        /* Custom Scrollbar */
-        .channels-section::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .channels-section::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-
-        .channels-section::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 4px;
-        }
-
-        .channels-section::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .channels-section {
-                max-height: 400px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .player-controls {
-                gap: 10px;
-            }
-
-            .control-btn {
-                padding: 8px;
-                font-size: 14px;
-            }
-
-            .channel-item {
-                padding: 12px;
-            }
+         h3 {
+            text-align: left;  /* Centering the headings */
+            text-size: 8px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>StreamTV</h1>
-            <p>Live TV Streaming - Kualitas HD dengan Multi Resolusi</p>
-        </div>
-
-        <div class="main-content">
-            <div class="player-section">
-                <div class="player-container" id="playerContainer">
-                    <div id="errorMessage" class="error-message" style="display: none;">
-                        Gagal memuat streaming. Silakan coba channel lain.
-                    </div>
-                    
-                    <div class="player-overlay">
-                        <div class="channel-info">
-                            <div class="live-indicator"></div>
-                            <div class="channel-name" id="currentChannelName">Pilih Channel</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="external-controls">
-                    <button class="control-btn" id="muteBtn" title="Mute/Unmute">
-                        🔊
-                    </button>
-                    
-                    <div class="resolution-dropdown">
-                        <button class="control-btn" id="resolutionBtn" title="Resolusi">
-                            HD
-                        </button>
-                        <div class="resolution-menu" id="resolutionMenu">
-                            <div class="resolution-option active" data-quality="auto">Auto</div>
-                            <div class="resolution-option" data-quality="1080">1080p</div>
-                            <div class="resolution-option" data-quality="720">720p</div>
-                            <div class="resolution-option" data-quality="480">480p</div>
-                        </div>
-                    </div>
-                    
-                    <button class="control-btn" id="fullscreenBtn" title="Fullscreen">
-                        ⛶
-                    </button>
-                </div>
-            </div>
-
-            <div class="channels-section">
-                <h2 class="channels-title">Daftar Channel</h2>
-                <div class="channel-list" id="channelList">
-                    <!-- Channels will be populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Channel data with various stream formats
-        const channels = [
-            {
-                id: 1,
-                name: "RCTI",
-                description: "Entertainment Indonesia",
-                type: "hls",
-                url: "https://mplus.cdnieuw.nl/rcti_live/smil:rcti_live.smil/playlist.m3u8",
-                resolutions: {
-                    "1080": "https://mplus.cdnieuw.nl/rcti_live/smil:rcti_live.smil/chunklist_b3628000_sleng.m3u8",
-                    "720": "https://mplus.cdnieuw.nl/rcti_live/smil:rcti_live.smil/chunklist_b2628000_sleng.m3u8",
-                    "480": "https://mplus.cdnieuw.nl/rcti_live/smil:rcti_live.smil/chunklist_b1628000_sleng.m3u8"
-                }
-            },
-            {
-                id: 2,
-                name: "SCTV",
-                description: "Surya Citra Televisi",
-                type: "hls",
-                url: "https://op-group1-swiftservehd-1.dens.tv/h/h217/index.m3u8",
-                resolutions: {
-                    "720": "https://op-group1-swiftservehd-1.dens.tv/h/h217/01.m3u8",
-                    "480": "https://op-group1-swiftservehd-1.dens.tv/h/h217/02.m3u8"
-                }
-            },
-            {
-                id: 3,
-                name: "Trans TV",
-                description: "Transparansi Indonesia",
-                type: "hls",
-                url: "https://video.detik.com/transtv/smil:transtv.smil/playlist.m3u8",
-                resolutions: {
-                    "720": "https://video.detik.com/transtv/smil:transtv.smil/chunklist_b1628000_sleng.m3u8"
-                }
-            },
-            {
-                id: 4,
-                name: "Metro TV",
-                description: "Berita dan Informasi",
-                type: "iframe",
-                url: "https://www.youtube.com/embed/B07Zo4VgowA?autoplay=1&mute=1&controls=0&showinfo=0",
-                resolutions: {}
-            },
-            {
-                id: 5,
-                name: "CNN Indonesia",
-                description: "Breaking News",
-                type: "hls",
-                url: "https://live.cnnindonesia.com/livecnn/smil:cnntv.smil/playlist.m3u8",
-                resolutions: {
-                    "720": "https://live.cnnindonesia.com/livecnn/smil:cnntv.smil/chunklist_b1628000_sleng.m3u8"
-                }
-            },
-            {
-                id: 6,
-                name: "Net TV",
-                description: "Indonesian Television",
-                type: "iframe",
-                url: "https://www.dailymotion.com/embed/video/k3GVzd2ENdsrQmyKi6e?autoplay=1&mute=1",
-                resolutions: {}
-            },
-            {
-                id: 7,
-                name: "Kompas TV",
-                description: "Inspirasi Indonesia",
-                type: "hls",
-                url: "https://op-group1-swiftservehd-1.dens.tv/h/h234/index.m3u8",
-                resolutions: {
-                    "720": "https://op-group1-swiftservehd-1.dens.tv/h/h234/01.m3u8"
-                }
-            },
-            {
-                id: 8,
-                name: "TV One",
-                description: "Satu untuk semua",
-                type: "hls",
-                url: "https://op-group1-swiftservehd-1.dens.tv/h/h224/index.m3u8",
-                resolutions: {
-                    "720": "https://op-group1-swiftservehd-1.dens.tv/h/h224/01.m3u8"
-                }
-            },
-            {
-                id: 9,
-                name: "Twitch Gaming",
-                description: "Live Gaming Stream",
-                type: "iframe",
-                url: "https://player.twitch.tv/?channel=riotgames&parent=localhost&autoplay=true&muted=true",
-                resolutions: {}
-            },
-            {
-                id: 10,
-                name: "Al Jazeera English",
-                description: "International News",
-                type: "hls",
-                url: "https://live-hls-web-aje.getaj.net/AJE/index.m3u8",
-                resolutions: {
-                    "1080": "https://live-hls-web-aje.getaj.net/AJE/01.m3u8",
-                    "720": "https://live-hls-web-aje.getaj.net/AJE/02.m3u8"
-                }
-            },
-            {
-                id: 11,
-                name: "DW TV",
-                description: "Deutsche Welle",
-                type: "iframe",
-                url: "https://www.youtube.com/embed/pqabxBKzZ6M?autoplay=1&mute=1&controls=0",
-                resolutions: {}
-            },
-            {
-                id: 12,
-                name: "France 24",
-                description: "French International News",
-                type: "hls",
-                url: "https://static.france24.com/live/F24_EN_LO_HLS/live_web.m3u8",
-                resolutions: {
-                    "720": "https://static.france24.com/live/F24_EN_LO_HLS/live_tv.m3u8"
-                }
-            }
-        ];
-
-        // Player variables
-        let currentPlayer = null;
-        let currentHls = null;
-        let currentChannel = null;
-        let isMuted = false;
-
-        // DOM elements
-        const playerContainer = document.getElementById('playerContainer');
-        const channelList = document.getElementById('channelList');
-        const currentChannelName = document.getElementById('currentChannelName');
-        const muteBtn = document.getElementById('muteBtn');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const resolutionBtn = document.getElementById('resolutionBtn');
-        const resolutionMenu = document.getElementById('resolutionMenu');
-        const errorMessage = document.getElementById('errorMessage');
-
-        // Initialize the app
-        function init() {
-            renderChannels();
-            setupEventListeners();
-        }
-
-        // Render channel list
-        function renderChannels() {
-            channelList.innerHTML = '';
-            
-            channels.forEach(channel => {
-                const channelElement = document.createElement('div');
-                channelElement.className = 'channel-item';
-                channelElement.dataset.channelId = channel.id;
-                
-                channelElement.innerHTML = `
-                    <div class="channel-logo">${channel.name.substring(0, 3).toUpperCase()}</div>
-                    <div class="channel-details">
-                        <h3>${channel.name}</h3>
-                        <p>${channel.description}</p>
-                    </div>
-                    <div class="status-indicator"></div>
-                `;
-                
-                channelElement.addEventListener('click', () => playChannel(channel));
-                channelList.appendChild(channelElement);
-            });
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Only add event listeners if elements exist
-            const muteBtn = document.getElementById('muteBtn');
-            const fullscreenBtn = document.getElementById('fullscreenBtn');
-            const resolutionBtn = document.getElementById('resolutionBtn');
-            const resolutionMenu = document.getElementById('resolutionMenu');
-            
-            if (muteBtn) muteBtn.addEventListener('click', toggleMute);
-            if (fullscreenBtn) fullscreenBtn.addEventListener('click', toggleFullscreen);
-            if (resolutionBtn) resolutionBtn.addEventListener('click', toggleResolutionMenu);
-            
-            // Close resolution menu when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.resolution-dropdown')) {
-                    resolutionMenu.classList.remove('show');
-                }
-            });
-            
-            // Resolution menu options
-            resolutionMenu.addEventListener('click', (e) => {
-                if (e.target.classList.contains('resolution-option')) {
-                    const quality = e.target.dataset.quality;
-                    changeResolution(quality);
-                }
-            });
-        }
-
-        // Play channel
-        function playChannel(channel) {
-            // Remove current player
-            clearCurrentPlayer();
-            
-            // Update UI
-            updateActiveChannel(channel);
-            currentChannel = channel;
-            currentChannelName.textContent = channel.name;
-            errorMessage.style.display = 'none';
-            
-            // Update resolution menu
-            updateResolutionMenu(channel);
-            
-            try {
-                if (channel.type === 'hls') {
-                    playHLSStream(channel);
-                } else if (channel.type === 'iframe') {
-                    playIframeStream(channel);
-                }
-            } catch (error) {
-                console.error('Error playing channel:', error);
-                showError();
-            }
-        }
-
-        // Play HLS stream
-        function playHLSStream(channel) {
-            const video = document.createElement('video');
-            video.controls = false;
-            video.autoplay = true;
-            video.muted = isMuted;
-            video.style.width = '100%';
-            video.style.height = '100%';
-            video.style.objectFit = 'cover';
-            
-            if (Hls.isSupported()) {
-                currentHls = new Hls({
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    backBufferLength: 90
-                });
-                
-                currentHls.loadSource(channel.url);
-                currentHls.attachMedia(video);
-                
-                currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(e => {
-                        console.log('Auto-play failed:', e);
-                        showError();
-                    });
-                });
-                
-                currentHls.on(Hls.Events.ERROR, (event, data) => {
-                    console.error('HLS Error:', data);
-                    if (data.fatal) {
-                        showError();
-                    }
-                });
-                
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = channel.url;
-                video.addEventListener('loadedmetadata', () => {
-                    video.play().catch(e => {
-                        console.log('Auto-play failed:', e);
-                        showError();
-                    });
-                });
-            } else {
-                showError();
-                return;
-            }
-            
-            video.addEventListener('error', () => {
-                showError();
-            });
-            
-            playerContainer.appendChild(video);
-            currentPlayer = video;
-        }
-
-        // Play iframe stream
-        function playIframeStream(channel) {
-            const iframe = document.createElement('iframe');
-            iframe.src = channel.url;
-            iframe.frameBorder = '0';
-            iframe.allowFullscreen = true;
-            iframe.allow = 'autoplay; encrypted-media';
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            
-            iframe.addEventListener('error', () => {
-                showError();
-            });
-            
-            playerContainer.appendChild(iframe);
-            currentPlayer = iframe;
-        }
-
-        // Clear current player
-        function clearCurrentPlayer() {
-            if (currentHls) {
-                currentHls.destroy();
-                currentHls = null;
-            }
-            
-            const existingPlayer = playerContainer.querySelector('video, iframe');
-            if (existingPlayer) {
-                existingPlayer.remove();
-            }
-            
-            currentPlayer = null;
-        }
-
-        // Update active channel in UI
-        function updateActiveChannel(channel) {
-            document.querySelectorAll('.channel-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            const activeItem = document.querySelector(`[data-channel-id="${channel.id}"]`);
-            if (activeItem) {
-                activeItem.classList.add('active');
-            }
-        }
-
-        // Toggle mute
-        function toggleMute() {
-            isMuted = !isMuted;
-            muteBtn.textContent = isMuted ? '🔇' : '🔊';
-            
-            if (currentPlayer && currentPlayer.tagName === 'VIDEO') {
-                currentPlayer.muted = isMuted;
-            }
-        }
-
-        // Toggle fullscreen
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                if (playerContainer.requestFullscreen) {
-                    playerContainer.requestFullscreen();
-                } else if (playerContainer.mozRequestFullScreen) {
-                    playerContainer.mozRequestFullScreen();
-                } else if (playerContainer.webkitRequestFullscreen) {
-                    playerContainer.webkitRequestFullscreen();
-                } else if (playerContainer.msRequestFullscreen) {
-                    playerContainer.msRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
-        }
-
-        // Toggle resolution menu
-        function toggleResolutionMenu() {
-            const resolutionMenu = document.getElementById('resolutionMenu');
-            if (resolutionMenu) {
-                resolutionMenu.classList.toggle('show');
-            }
-        }
-
-        // Update resolution menu based on channel
-        function updateResolutionMenu(channel) {
-            const options = resolutionMenu.querySelectorAll('.resolution-option');
-            
-            options.forEach(option => {
-                const quality = option.dataset.quality;
-                if (quality === 'auto' || Object.keys(channel.resolutions).includes(quality)) {
-                    option.style.display = 'block';
-                } else {
-                    option.style.display = 'none';
-                }
-            });
-            
-            // Reset to auto
-            options.forEach(opt => opt.classList.remove('active'));
-            const autoOption = document.querySelector('[data-quality="auto"]');
-            const resolutionBtn = document.getElementById('resolutionBtn');
-            if (autoOption) autoOption.classList.add('active');
-            if (resolutionBtn) resolutionBtn.textContent = 'Auto';
-        }
-
-        // Change resolution
-        function changeResolution(quality) {
-            if (!currentChannel || currentChannel.type !== 'hls') return;
-            
-            let url = currentChannel.url;
-            
-            if (quality !== 'auto' && currentChannel.resolutions[quality]) {
-                url = currentChannel.resolutions[quality];
-            }
-            
-            // Update active resolution in menu
-            resolutionMenu.querySelectorAll('.resolution-option').forEach(opt => {
-                opt.classList.remove('active');
-            });
-            document.querySelector(`[data-quality="${quality}"]`).classList.add('active');
-            resolutionBtn.textContent = quality === 'auto' ? 'Auto' : quality + 'p';
-            
-            // Reload with new resolution
-            if (currentHls && url !== currentChannel.url) {
-                currentHls.loadSource(url);
-            }
-            
-            resolutionMenu.classList.remove('show');
-        }
-
-        // Show error message
-        function showError() {
-            errorMessage.style.display = 'flex';
-        }
-
-        // Listen for fullscreen changes
-        document.addEventListener('fullscreenchange', updateFullscreenButton);
-        document.addEventListener('mozfullscreenchange', updateFullscreenButton);
-        document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
-        document.addEventListener('msfullscreenchange', updateFullscreenButton);
-
-        function updateFullscreenButton() {
-            const isFullscreen = document.fullscreenElement || 
-                                document.mozFullScreenElement || 
-                                document.webkitFullscreenElement || 
-                                document.msFullscreenElement;
-            
-            const fullscreenBtn = document.getElementById('fullscreenBtn');
-            if (fullscreenBtn) {
-                fullscreenBtn.textContent = isFullscreen ? '⛉' : '⛶';
-            }
-        }
-
-        // Initialize the application
-        init();
-    </script>
+    <h1>Data Nama Anak Yatim</h1>
+    <h2>Bengkak Wongsorejo Banyuwangi Tahun 2025</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Tgl lahir</th>
+                <th>Umur</th>
+                <th>Alamat</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Ahmad Firdiyanto</td>
+                <td>23-03-2016</td>
+                <td>9 Tahun</td>
+                <td>Dsn Krajan RT/RW 004/003</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Mohammad Alby Aqlan</td>
+                <td>22-08-2022</td>
+                <td>3 Tahun</td>
+                <td>Dsn Krajan RT/RW 004/003</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Firman Maulana</td>
+                <td>01-12-2014</td>
+                <td>11 Tahun</td>
+                <td>Dsn Krajan RT/RW 003/003</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Sintiya Ayu Lestri</td>
+                <td>26-09-2022</td>
+                <td>3 Tahun</td>
+                <td>Dsn Krajan RT/RW 003/005</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Yatima</td>
+                <td>03-07-2016</td>
+                <td>9 Tahun</td>
+                <td>Dsn Krajan RT/RW 002/002</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Aliando Syarief</td>
+                <td>08-09-2014</td>
+                <td>11 Tahun</td>
+                <td>Dsn Krajan RT/RW 002/002</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Mohammad Firman</td>
+                <td>28-09-2018</td>
+                <td>7 Tahun</td>
+                <td>Dsn Krajan RT/RW 002/002</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Moh Adib Almahbubi</td>
+                <td>24-08-2017</td>
+                <td>8 Tahun</td>
+                <td>Dsn Krajan RT/RW 005/002</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>Nanta Indi Nasrullah</td>
+                <td>28-03-2015</td>
+                <td>10 Tahun</td>
+                <td>Dsn Krajan RT/RW 004/001</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>Ihaf Taufik</td>
+                <td>23-01-2014</td>
+                <td>11 Tahun</td>
+                <td>Dsn Krajan RT/RW 002/001</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Ananda Cikal Al Ghazali</td>
+                <td>12-04-2017</td>
+                <td>8 Tahun</td>
+                <td>Dsn Possumur RT/RW 001/002</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>Insha Naziha Anida</td>
+                <td>13-11-2018</td>
+                <td>7 Tahun</td>
+                <td>Dsn Possumur RT/RW 003/005</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>Moh. Alif Syaputra</td>
+                <td>23-12-2016</td>
+                <td>9 Tahun</td>
+                <td>Dsn Possumur RT/RW 002/006</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>Michailah Belani T. A.</td>
+                <td>08-11-2018</td>
+                <td>7 Tahun</td>
+                <td>Dsn Krajan RT/RW 002/002</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>Abdul Yatim</td>
+                <td>05-02-2018</td>
+                <td>7 Tahun</td>
+                <td>Dsn Krajan RT/RW 001/001</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>Qotrunada Azni Laurinda P. H.</td>
+                <td>05-01-2021</td>
+                <td>4 Tahun</td>
+                <td>Dsn Possumur RT/RW 003/004</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td>Nurmala Fitriana</td>
+                <td>06-07-2016</td>
+                <td>9 Tahun</td>
+                <td>Dsn Krajan RT/RW 002/001</td>
+            </tr>
+        </tbody>
+    </table>
+     <h3>Note : Data ini milik/di ambil dari Majelis Sholawat Watta'lim Anwarul Huda</h3>
 </body>
 </html>
-
