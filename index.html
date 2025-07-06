@@ -1,175 +1,52 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <title>Website Dalam Pemeliharaan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Anak Yatim</title>
+    <meta name="description" content="Daftar penerima manfaat program anak yatim Yayasan Antareksa">
+    <meta name="theme-color" content="#2c3e50">
     <style>
+        @keyframes colorPulse {
+            0% { background-color: #f5f5f5; }
+            50% { background-color: #e8e8e8; }
+            100% { background-color: #f5f5f5; }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            color: #333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            animation: colorPulse 3s infinite;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background-color: #fff;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        h1, h2, h3 {
-            text-align: center;  /* Centering the headings */
-        }
-         h3 {
-            text-align: left;  /* Centering the headings */
-            text-size: 8px;
+        h1 {
+            color: #2c3e50;
         }
     </style>
 </head>
 <body>
-    <h1>Data Nama Anak Yatim</h1>
-    <h2>Bengkak Wongsorejo Banyuwangi Tahun 2025</h2>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Tgl lahir</th>
-                <th>Umur</th>
-                <th>Alamat</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Ahmad Firdiyanto</td>
-                <td>23-03-2016</td>
-                <td>9 Tahun</td>
-                <td>Dsn Krajan RT/RW 004/003</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Mohammad Alby Aqlan</td>
-                <td>22-08-2022</td>
-                <td>3 Tahun</td>
-                <td>Dsn Krajan RT/RW 004/003</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Firman Maulana</td>
-                <td>01-12-2014</td>
-                <td>11 Tahun</td>
-                <td>Dsn Krajan RT/RW 003/003</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Sintiya Ayu Lestri</td>
-                <td>26-09-2022</td>
-                <td>3 Tahun</td>
-                <td>Dsn Krajan RT/RW 003/005</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>Yatima</td>
-                <td>03-07-2016</td>
-                <td>9 Tahun</td>
-                <td>Dsn Krajan RT/RW 002/002</td>
-            </tr>
-            <tr>
-                <td>6</td>
-                <td>Aliando Syarief</td>
-                <td>08-09-2014</td>
-                <td>11 Tahun</td>
-                <td>Dsn Krajan RT/RW 002/002</td>
-            </tr>
-            <tr>
-                <td>7</td>
-                <td>Mohammad Firman</td>
-                <td>28-09-2018</td>
-                <td>7 Tahun</td>
-                <td>Dsn Krajan RT/RW 002/002</td>
-            </tr>
-            <tr>
-                <td>8</td>
-                <td>Moh Adib Almahbubi</td>
-                <td>24-08-2017</td>
-                <td>8 Tahun</td>
-                <td>Dsn Krajan RT/RW 005/002</td>
-            </tr>
-            <tr>
-                <td>9</td>
-                <td>Nanta Indi Nasrullah</td>
-                <td>28-03-2015</td>
-                <td>10 Tahun</td>
-                <td>Dsn Krajan RT/RW 004/001</td>
-            </tr>
-            <tr>
-                <td>10</td>
-                <td>Ihaf Taufik</td>
-                <td>23-01-2014</td>
-                <td>11 Tahun</td>
-                <td>Dsn Krajan RT/RW 002/001</td>
-            </tr>
-            <tr>
-                <td>11</td>
-                <td>Ananda Cikal Al Ghazali</td>
-                <td>12-04-2017</td>
-                <td>8 Tahun</td>
-                <td>Dsn Possumur RT/RW 001/002</td>
-            </tr>
-            <tr>
-                <td>12</td>
-                <td>Insha Naziha Anida</td>
-                <td>13-11-2018</td>
-                <td>7 Tahun</td>
-                <td>Dsn Possumur RT/RW 003/005</td>
-            </tr>
-            <tr>
-                <td>13</td>
-                <td>Moh. Alif Syaputra</td>
-                <td>23-12-2016</td>
-                <td>9 Tahun</td>
-                <td>Dsn Possumur RT/RW 002/006</td>
-            </tr>
-            <tr>
-                <td>14</td>
-                <td>Michailah Belani T. A.</td>
-                <td>08-11-2018</td>
-                <td>7 Tahun</td>
-                <td>Dsn Krajan RT/RW 002/002</td>
-            </tr>
-            <tr>
-                <td>15</td>
-                <td>Abdul Yatim</td>
-                <td>05-02-2018</td>
-                <td>7 Tahun</td>
-                <td>Dsn Krajan RT/RW 001/001</td>
-            </tr>
-            <tr>
-                <td>16</td>
-                <td>Qotrunada Azni Laurinda P. H.</td>
-                <td>05-01-2021</td>
-                <td>4 Tahun</td>
-                <td>Dsn Possumur RT/RW 003/004</td>
-            </tr>
-            <tr>
-                <td>17</td>
-                <td>Nurmala Fitriana</td>
-                <td>06-07-2016</td>
-                <td>9 Tahun</td>
-                <td>Dsn Krajan RT/RW 002/001</td>
-            </tr>
-        </tbody>
-    </table>
-     <h3>Note : Data ini milik/di ambil dari Majelis Sholawat Watta'lim Anwarul Huda</h3>
+    <div class="container">
+        <h1 style="text-align: center;">🛠️ SEDANG DALAM PEMELIHARAAN</h1>
+        <p style="text-align: center; font-size: 1.2em;">Mohon maaf, website sedang dalam perbaikan dan akan segera kembali online.</p>
+        <div style="text-align: center; margin: 40px 0;">
+            <div style="width: 100px; height: 100px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 50px; animation: spin 2s linear infinite;">⚙️</span>
+            </div>
+        </div>
+    </div>
+    <footer style="text-align: center; margin-top: 40px; color: #666;">
+        &copy; 2024 - Akan kembali segera
+    </footer>
 </body>
 </html>
