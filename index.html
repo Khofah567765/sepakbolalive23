@@ -1,207 +1,48 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ailok TV - Jogu Futebol Live</title>
-  <style>
-    /* General Body Styles */
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #111827; /* Mirip gray-900 */
-      color: #f9fafb; /* Mirip gray-50 */
-    }
-
-    /* Header Section */
-    .header {
-      text-align: center;
-      padding: 2.5rem 1rem;
-      background-image: linear-gradient(to bottom, #111827, #1f2937); /* from-gray-900 to-gray-800 */
-    }
-    .header h1 {
-      font-size: 2.25rem; /* text-4xl */
-      margin-top: 1.75rem;
-      margin-bottom: 1rem;
-      font-weight: 800; /* font-extrabold */
-      letter-spacing: -0.025em;
-    }
-    .header h1 .highlight-blue {
-      color: #60a5fa; /* text-blue-400 */
-    }
-    .header p {
-      font-size: 1.125rem; /* text-lg */
-      color: #d1d5db; /* text-gray-300 */
-      max-width: 42rem;
-      margin: 0 auto;
-    }
-    .header .text-yellow { color: #facc15; }
-    .header .text-green { color: #4ade80; }
-    .header .text-blue { color: #60a5fa; }
-    .header .font-semibold { font-weight: 600; }
-
-    /* Main Content Grid */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(1, 1fr);
-      gap: 1rem;
-      padding: 1rem;
-      margin-top: 0.75rem;
-    }
-    /* Responsive Grid Columns */
-    @media (min-width: 640px) { /* sm */
-      .header h1 { font-size: 3rem; }
-      .header p { font-size: 1.25rem; }
-      .card-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (min-width: 768px) { /* md */
-      .card-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (min-width: 1024px) { /* lg */
-      .card-grid { grid-template-columns: repeat(4, 1fr); }
-    }
-
-    /* Card Styling */
-    .card-link {
-      display: block;
-      text-decoration: none;
-      color: inherit;
-      background-color: #1f2937; /* gray-800 */
-      border-radius: 0.75rem;
-      overflow: hidden;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
-    .card-link:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-    }
-    .card-thumbnail {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      display: block;
-      background-color: #374151; /* gray-700 */
-    }
-    .card-content {
-      padding: 1rem;
-    }
-    .card-title {
-      font-size: 1.125rem;
-      font-weight: 700;
-      margin: 0 0 0.5rem 0;
-      color: #f9fafb; /* gray-50 */
-    }
-    .card-text {
-      font-size: 0.875rem;
-      color: #9ca3af; /* gray-400 */
-      margin: 0.25rem 0 0 0;
-      min-height: 40px;
-    }
-    .card-link.inactive {
-        cursor: not-allowed;
-    }
-    .card-link.inactive .card-thumbnail {
-        filter: grayscale(80%);
-    }
-
-    /* Footer */
-    .footer {
-      text-align: center;
-      padding: 2rem 1rem;
-      color: #9ca3af; /* gray-400 */
-      font-size: 0.875rem;
-    }
-  </style>
+    <title>Kirim ID Perangkat</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+        #deviceIdInput { width: 300px; padding: 10px; }
+        #submitButton { padding: 10px 20px; cursor: pointer; }
+    </style>
 </head>
 <body>
+    <h1>Verifikasi Perangkat</h1>
+    <p>ID perangkat Anda akan dikirim untuk persetujuan.</p>
+    <input type="text" id="deviceIdInput" readonly />
+    <button id="submitButton">Kirim untuk Verifikasi</button>
+    <p id="statusMessage"></p>
 
-  <header class="header">
-    <h1>
-      Jogu Futebol ne'ebe Live iha <span class="highlight-blue">Ailok TV ⚽</span>
-    </h1>
-    <p>
-      Bele Asiste husi 
-      <span class="text-yellow font-semibold">Laptop</span>,
-      <span class="text-green font-semibold"> Telefone</span> (uza Chrome),
-      <span class="text-blue font-semibold"> Televizaun Android</span> nst!
-    </p>
-  </header>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const deviceId = urlParams.get('deviceId');
+        const deviceIdInput = document.getElementById('deviceIdInput');
+        const submitButton = document.getElementById('submitButton');
+        const statusMessage = document.getElementById('statusMessage');
 
-  <main class="card-grid">
-    
-    <a href="#" class="card-link inactive" onclick="return false;">
-      <img src="https://ringmagazine.com/_next/image?url=https%3A%2F%2Fthankful-crystal-c5f59294d4.media.strapiapp.com%2F07_19_PPV_1920x1080_web_e59418f263.jpg&w=1920&q=75" alt="Boxing Thumbnail" class="card-thumbnail">
-      <div class="card-content">
-        <h3 class="card-title">Boxing Many Pacquiao vs Barrios</h3>
-        <p class="card-text">19 Jullu 2025</p>
-        <p class="card-text">Haree orariu kompleta iha Google</p>
-      </div>
-    </a>
-    
-    <a href="intent://tglmp04.akamaized.net/out/v1/400fc0702dee453bb33ebcc29466e58a/manifest.mpd|drmScheme=clearkey&drmLicense=91b9592c819246c68b3b08a1fe08ba22:fa0d80dfd865b34077bae44cd4a0c5e6#Intent;scheme=https;type=video/*;package=com.genuine.leone;S.browser_fallback_url=market://details?id=com.genuine.leone.ad;S.title=LIVETV;end" class="card-link">
-      <img src="https://i.ytimg.com/vi/6BguoM3Q_YQ/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGBMgMyh_MA8=&rs=AOn4CLDhimAdRzTjo2_7VeL0y5x4n8LGKw" alt="AFF ASEAN Thumbnail" class="card-thumbnail">
-      <div class="card-content">
-        <h3 class="card-title">AFF ASEAN U23 Indonezia (Ingles)</h3>
-        <p class="card-text">15 Jullu - 29 Jullu 2025</p>
-        <p class="card-text">Haree orariu kompleta iha Google</p>
-      </div>
-    </a>
+        if (deviceId) {
+            deviceIdInput.value = deviceId;
+        }
 
-    <a href="intent://rmtv.akamaized.net/hls/live/2043154/rmtv-en-web/master.m3u8|&User-Agent=Mozilla/5.0 (Linux; Android 11; SM-A307GN Build/RP1A.200720.012; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/107.0.5304.91 Mobile Safari/537.36 Vinebre#Intent;scheme=https;type=video/*;package=com.genuine.leone;S.browser_fallback_url=market://details?id=com.genuine.leone.ad;S.title=LIVETV;end" class="card-link">
-      <img src="https://www.sportyou.es/blog/wp-content/uploads/2015/09/realmadridtv.jpg" alt="Real Madrid TV Thumbnail" class="card-thumbnail">
-      <div class="card-content">
-        <h3 class="card-title">Real Madrid TV</h3>
-        <p class="card-text">Loron-Loron</p>
-        <p class="card-text">Live Direta preparasaun no jogu tuan Real Madrid</p>
-      </div>
-    </a>
-    
-    <a href="intent://a151aivottlinear-a.akamaihd.net/OTTB/pdx-nitro/live/clients/dash/enc/bmnelo5c7a/out/v1/3ce2cdc4589f46189322bd3717c77957/cenc.mpd|User-Agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleCoreMedia/537.36 iPhone (KHTML, like Gecko) Version/4.0 Chromecast/107.0.5304.91 Mobile Safari/537.36&drmScheme=clearkey&drmLicense=44dd9cd370b08a868ead115fe84ecfde:bff19ab0a51cf14e848389b152913fd0#Intent;scheme=https;type=video/*;package=com.genuine.leone;S.browser_fallback_url=market://details?id=com.genuine.leone.ad;S.title=LIVETV;end" class="card-link">
-      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/1200px-Premier_League_Logo.svg.png" alt="Premier League Thumbnail" class="card-thumbnail">
-      <div class="card-content">
-        <h3 class="card-title">Live Liga Inglesa</h3>
-        <p class="card-text">Kanal Foka ba Jogu sira seluk Liga Inglesa nian</p>
-      </div>
-    </a>
-
-    <a href="intent://a166aivottlinear-a.akamaihd.net/OTTB/dub-nitro/live/clients/dash/enc/k0duzgfejg/out/v1/70a50b1bda944628b8e7e66ab4069419/cenc.mpd|User-Agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleCoreMedia/537.36 iPhone (KHTML, like Gecko) Version/4.0 Chromecast/107.0.5304.91 Mobile Safari/537.36&drmScheme=clearkey&drmLicense=620e51b82596475517a27aa425c52280:2b9ba811e9c5aeafc8ae1b71cdca4d6a#Intent;scheme=https;type=video/*;package=com.genuine.leone;S.browser_fallback_url=market://details?id=com.genuine.leone.ad;S.title=LIVETV;end" class="card-link">
-      <img src="https://logowik.com/content/uploads/images/laliga-2023-2024-new3252.logowik.com.webp" alt="La Liga Thumbnail" class="card-thumbnail">
-      <div class="card-content">
-        <h3 class="card-title">Live Liga Espanha</h3>
-        <p class="card-text">Kanal Foka ba Jogu sira seluk Liga Espanha nian</p>
-      </div>
-    </a>
-
-    <a href="intent://tataplay.slivcdn.com/hls/live/2020434/TEN2HD/master.m3u8|User-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Mobile/15E148 Safari/605.1.15/Clipbox+/2.2.8& Vinebre#Intent;scheme=https;type=video/*;package=com.genuine.leone;S.browser_fallback_url=market://details?id=com.genuine.leone.ad;S.title=LIVETV;end" class="card-link">
-      <img src="https://www.idman.biz/media/2024/07/16/1920x1280/bundesliga.webp?v=1721130454" alt="Bundesliga Thumbnail" class="card-thumbnail">
-      <div class="card-content">
-        <h3 class="card-title">Live Liga Alemanha</h3>
-        <p class="card-text">Kanal Foka ba Jogu sira seluk Liga Alemanha nian</p>
-      </div>
-    </a>
-
-    <a href="intent://uselector.cdn.intigral-ott.net/ADSP1/ADSP1.isml/manifest.mpd|User-Agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 iPhone (KHTML, like Gecko) Version/4.0 Chrome/107.0.5304.91 Mobile Safari/537.36&drmScheme=clearkey&drmLicense=eb5a3a48f3e191a00e3ac1e2d470c491:2c8b7198563527e524d66628c092ef1f#Intent;scheme=https;type=video/*;package=com.genuine.leone;S.browser_fallback_url=market://details?id=com.genuine.leone.ad;S.title=LIVETV;end" class="card-link">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Serie_A_logo_2022.svg/1200px-Serie_A_logo_2022.svg.png" alt="Serie A Thumbnail" class="card-thumbnail">
-      <div class="card-content">
-        <h3 class="card-title">Live Liga Italia</h3>
-        <p class="card-text">Kanal Foka ba Jogu sira seluk Liga Italia nian</p>
-      </div>
-    </a>
-
-    <a href="#" class="card-link inactive" onclick="return false;">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT17waUfO3dHURK40tmMJsQGRE6SXdCEZ-B3Q&s" alt="Coming Soon Thumbnail" class="card-thumbnail">
-      <div class="card-content">
-        <h3 class="card-title">Quarter Finals</h3>
-        <p class="card-text">Komesa Semana Oin</p>
-      </div>
-    </a>
-
-  </main>
-
-  <footer class="footer">
-    <p>&copy; 2025 Ailok TV. Hak cipta terpelihara.</p>
-  </footer>
-
+        submitButton.addEventListener('click', async () => {
+            const endpointUrl = 'URL_FIREBASE_FUNCTIONS_ANDA'; // Ganti dengan URL Functions Anda
+            const response = await fetch(endpointUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ deviceId: deviceIdInput.value }),
+            });
+            const result = await response.json();
+            if (result.success) {
+                statusMessage.textContent = 'ID berhasil dikirim! Mohon tunggu konfirmasi dari admin.';
+                submitButton.disabled = true;
+            } else {
+                statusMessage.textContent = 'Gagal mengirim ID. Silakan coba lagi.';
+            }
+        });
+    </script>
 </body>
 </html>
