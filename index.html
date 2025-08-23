@@ -1,48 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Kirim ID Perangkat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web IPTV Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-        #deviceIdInput { width: 300px; padding: 10px; }
-        #submitButton { padding: 10px 20px; cursor: pointer; }
+        body {
+            font-family: sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #channel-list {
+            width: 300px;
+            background-color: #fff;
+            overflow-y: auto;
+            border-right: 1px solid #ccc;
+        }
+        .channel-item {
+            padding: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        .channel-item:hover {
+            background-color: #e0e0e0;
+        }
+        .channel-item.active {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        #player-container {
+            flex-grow: 1;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
-    <h1>Verifikasi Perangkat</h1>
-    <p>ID perangkat Anda akan dikirim untuk persetujuan.</p>
-    <input type="text" id="deviceIdInput" readonly />
-    <button id="submitButton">Kirim untuk Verifikasi</button>
-    <p id="statusMessage"></p>
+
+    <div id="channel-list">
+        </div>
+
+    <div id="player-container">
+        <video id="player" controls autoplay></video>
+    </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const deviceId = urlParams.get('deviceId');
-        const deviceIdInput = document.getElementById('deviceIdInput');
-        const submitButton = document.getElementById('submitButton');
-        const statusMessage = document.getElementById('statusMessage');
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- GANTI URL INI DENGAN LINK PLAYLIST M3U ANDA ---
+            const m3uUrl = 'https://www.donztelevision.biz.id/2025/07/donz-television-new-update.html'; // Contoh: Playlist channel Indonesia
+            
+            const video = document.getElementById('player');
+            const channelList = document.getElementById('channel-list');
+            let hls = new Hls();
 
-        if (deviceId) {
-            deviceIdInput.value = deviceId;
-        }
+            // Fungsi untuk memutar channel
+            function playChannel(url, element) {
+                // Hapus status aktif dari channel sebelumnya
+                const activeElement = document.querySelector('.channel-item.active');
+                if (activeElement) {
+                    activeElement.classList.remove('active');
+                }
+                // Tambahkan status aktif ke channel yang dipilih
+                element.classList.add('active');
 
-        submitButton.addEventListener('click', async () => {
-            const endpointUrl = 'URL_FIREBASE_FUNCTIONS_ANDA'; // Ganti dengan URL Functions Anda
-            const response = await fetch(endpointUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ deviceId: deviceIdInput.value }),
-            });
-            const result = await response.json();
-            if (result.success) {
-                statusMessage.textContent = 'ID berhasil dikirim! Mohon tunggu konfirmasi dari admin.';
-                submitButton.disabled = true;
-            } else {
-                statusMessage.textContent = 'Gagal mengirim ID. Silakan coba lagi.';
+                if (Hls.isSupported()) {
+                    hls.destroy(); // Hentikan stream sebelumnya
+                    hls = new Hls();
+                    hls.loadSource(url);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                        video.play();
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = url;
+                    video.addEventListener('loadedmetadata', function () {
+                        video.play();
+                    });
+                }
             }
+
+            // Mengambil dan memproses file M3U
+            fetch(m3uUrl)
+                .then(response => response.text())
+                .then(data => {
+                    const lines = data.split('\n');
+                    let channelInfo = {};
+                    
+                    lines.forEach(line => {
+                        if (line.startsWith('#EXTINF:')) {
+                            // Ekstrak nama channel dari baris #EXTINF
+                            const name = line.split(',').pop().trim();
+                            channelInfo.name = name;
+                        } else if (line.startsWith('http')) {
+                            // Ini adalah URL streamingnya
+                            channelInfo.url = line.trim();
+                            
+                            // Buat elemen untuk daftar channel
+                            const channelElement = document.createElement('div');
+                            channelElement.className = 'channel-item';
+                            channelElement.innerText = channelInfo.name;
+                            
+                            // Tambahkan event listener untuk memutar channel saat diklik
+                            const urlToPlay = channelInfo.url; // Simpan URL dalam scope ini
+                            channelElement.addEventListener('click', () => playChannel(urlToPlay, channelElement));
+                            
+                            channelList.appendChild(channelElement);
+                            
+                            // Reset objek untuk channel berikutnya
+                            channelInfo = {};
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Gagal memuat playlist:', error);
+                    channelList.innerText = 'Gagal memuat playlist. Pastikan URL benar dan hosting mengizinkan CORS.';
+                });
         });
     </script>
+
 </body>
 </html>
