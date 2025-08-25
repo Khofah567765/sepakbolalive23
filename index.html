@@ -101,28 +101,3 @@
     <script src="app.js"></script>
 </body>
 </html>
-                            // Buat elemen untuk daftar channel
-                            const channelElement = document.createElement('div');
-                            channelElement.className = 'channel-item';
-                            channelElement.innerText = channelInfo.name;
-                            
-                            // Tambahkan event listener untuk memutar channel saat diklik
-                            const urlToPlay = channelInfo.url; // Simpan URL dalam scope ini
-                            channelElement.addEventListener('click', () => playChannel(urlToPlay, channelElement));
-                            
-                            channelList.appendChild(channelElement);
-                            
-                            // Reset objek untuk channel berikutnya
-                            channelInfo = {};
-                        }
-                    });
-                })
-                .catch(error => {
-                    console.error('Gagal memuat playlist:', error);
-                    channelList.innerText = 'Gagal memuat playlist. Pastikan URL benar dan hosting mengizinkan CORS.';
-                });
-        });
-    </script>
-
-</body>
-</html>
