@@ -260,7 +260,7 @@
 
         // === FUNGSI UNTUK MERENDER DAFTAR NAMA (HANYA NAMA) ===
         function renderLists() {
-            // Hitung indeks dasar untuk setiap peran secara independen
+            // 1. Hitung indeks dasar untuk setiap peran secara independen
             const [thisFriKhotib] = getScheduleDates('khotib');
             const [thisFriBilal] = getScheduleDates('bilal');
             const [thisFriMuadzin] = getScheduleDates('muadzin');
@@ -283,17 +283,21 @@
 
                 const scheduledIndex = item.startIndex % item.data.length;
                 
-                // 1. Buat array baru yang diurutkan secara kronologis (Circular shift)
+                // --- Logika Circular Shift ---
                 const chronologicalRotation = [];
-                
-                for (let i = scheduledIndex; i < item.data.length; i++) {
+                const dataLength = item.data.length;
+
+                // Ambil elemen dari indeks jadwal hingga akhir array
+                for (let i = scheduledIndex; i < dataLength; i++) {
                     chronologicalRotation.push(item.data[i]);
                 }
+                // Ambil elemen dari awal array hingga indeks sebelum jadwal
                 for (let i = 0; i < scheduledIndex; i++) {
                     chronologicalRotation.push(item.data[i]);
                 }
+                // --- Akhir Logika Circular Shift ---
                 
-                // 2. Tampilkan array yang sudah diurutkan (chronologicalRotation)
+                // Tampilkan array yang sudah diurutkan (chronologicalRotation)
                 chronologicalRotation.forEach((name, index) => {
                     const li = document.createElement('li');
                     
@@ -412,6 +416,7 @@
 
         function updateSchedule() {
             updateClock();
+            loadDataFromStorage(); // Memastikan data array terbaru selalu dimuat
             renderLists(); 
 
             // Hitung jadwal untuk KHOTIB (Independent)
