@@ -342,63 +342,51 @@
             document.getElementById('substituteModal').classList.add('show-modal');
         }
 
-        // === 3. Fungsi Inti: Handle Pilihan dan Geser Nama (LOGIKA REVISI FINAL) ===
+        // === 3. Fungsi Inti: Handle Pilihan dan Geser Nama (LOGIKA FILTER AMAN) ===
         function handleSubstituteSelection(role, substituteName) {
             document.getElementById('substituteModal').classList.remove('show-modal');
 
             let arrayToModify;
-            if (role === 'khotib') arrayToModify = khotib;
-            else if (role === 'bilal') arrayToModify = bilal;
-            else if (role === 'muadzin') arrayToModify = muadzin;
+            let arrayKey;
+
+            if (role === 'khotib') { arrayToModify = khotib; arrayKey = 'khotib'; }
+            else if (role === 'bilal') { arrayToModify = bilal; arrayKey = 'bilal'; }
+            else if (role === 'muadzin') { arrayToModify = muadzin; arrayKey = 'muadzin'; }
             else return;
 
             const roleName = role.charAt(0).toUpperCase() + role.slice(1);
-            const substituteIndex = arrayToModify.indexOf(substituteName);
 
-            // Ambil data tanggal dan indeks yang tetap
-            const [thisFri, nextFri] = getScheduleDates(role);
+            // Ambil data nama saat ini untuk konfirmasi
+            const [thisFri] = getScheduleDates(role);
             const baseIndexThis = getIndexForFriday(thisFri);
             const currentIndex = baseIndexThis % arrayToModify.length;
-            const nextIndex = getIndexForFriday(nextFri) % arrayToModify.length;
-
             const scheduledPerson = arrayToModify[currentIndex];
-            const nextScheduledPerson = arrayToModify[nextIndex];
 
             if (!confirm(`Yakin menggeser ${roleName} PENGGANTI: **${substituteName}** ke urutan paling belakang? \n\nRotasi akan berubah: ${scheduledPerson} tetap di jadwal JUMAT INI.`)) {
                 return;
             }
 
-            // A. LOGIKA GESER STANDAR: Hapus dari posisi saat ini, tambahkan ke akhir
-            // Kita lakukan ini di awal untuk mendapatkan array yang dimodifikasi
-            const [removed] = arrayToModify.splice(substituteIndex, 1); 
-            arrayToModify.push(removed); 
+            // === LOGIKA GESER DENGAN FILTER (SANGAT AMAN) ===
+            
+            // 1. Buat array baru yang hanya berisi nama-nama yang TIDAK digeser
+            // Ini menjamin tidak ada perubahan indeks yang tidak disengaja
+            const filteredArray = arrayToModify.filter(name => name !== substituteName);
 
-            // B. LOGIKA PERBAIKAN: Memastikan Next Scheduled Person TIDAK BERUBAH
-            if (removed === nextScheduledPerson) {
-                // KASUS KRITIS: Nama yang digeser adalah petugas Jumat Akan Datang.
+            // 2. Tambahkan nama yang digeser ke posisi paling akhir
+            filteredArray.push(substituteName);
 
-                // 1. Ambil nama yang sekarang menempati posisi Next Index (nama yang salah)
-                const newNextPerson = arrayToModify[nextIndex]; 
-
-                // 2. Hapus nama yang salah (newNextPerson) dari array
-                arrayToModify.splice(nextIndex, 1);
-
-                // 3. Masukkan kembali nama yang benar (removed/nextScheduledPerson) ke Next Index
-                arrayToModify.splice(nextIndex, 0, removed); 
-
-                // 4. Hapus nama yang salah (newNextPerson) dari akhir array (posisi removed)
-                arrayToModify.pop(); 
-                
-                // 5. Tempatkan nama yang salah (newNextPerson) ke posisi paling akhir, sesuai permintaan user.
-                arrayToModify.push(newNextPerson); 
-            }
-            // --- AKHIR LOGIKA PERBAIKAN ---
-
-            localStorage.setItem(`data_${role}`, JSON.stringify(arrayToModify));
+            // 3. Update array referensi global
+            if (role === 'khotib') khotib = filteredArray;
+            else if (role === 'bilal') bilal = filteredArray;
+            else if (role === 'muadzin') muadzin = filteredArray;
+            
+            // 4. Simpan array baru ke Local Storage
+            localStorage.setItem(`data_${arrayKey}`, JSON.stringify(filteredArray));
+            // ===========================================
             
             updateSchedule(); 
             
-            alert(`✅ ${roleName} ${substituteName} telah berhasil digeser ke urutan terakhir. Jadwal utama Jumat Ini/Akan Datang telah dipertahankan.`);
+            alert(`✅ ${roleName} ${substituteName} telah berhasil digeser ke urutan terakhir.`);
         }
 
         // === 4. FUNGSI KONFIRMASI JADWAL SELESAI (Manual Advance Per Role) ===
