@@ -342,7 +342,7 @@
             document.getElementById('substituteModal').classList.add('show-modal');
         }
 
-        // === 3. Fungsi Inti: Handle Pilihan dan Geser Nama (LOGIKA PERBAIKAN) ===
+        // === 3. Fungsi Inti: Handle Pilihan dan Geser Nama (LOGIKA REVISI FINAL) ===
         function handleSubstituteSelection(role, substituteName) {
             document.getElementById('substituteModal').classList.remove('show-modal');
 
@@ -362,32 +362,35 @@
             const nextIndex = getIndexForFriday(nextFri) % arrayToModify.length;
 
             const scheduledPerson = arrayToModify[currentIndex];
-            const nextScheduledPerson = arrayToModify[nextIndex]; // Nama yang seharusnya berada di Jumat Akan Datang!
+            const nextScheduledPerson = arrayToModify[nextIndex];
 
             if (!confirm(`Yakin menggeser ${roleName} PENGGANTI: **${substituteName}** ke urutan paling belakang? \n\nRotasi akan berubah: ${scheduledPerson} tetap di jadwal JUMAT INI.`)) {
                 return;
             }
 
             // A. LOGIKA GESER STANDAR: Hapus dari posisi saat ini, tambahkan ke akhir
+            // Kita lakukan ini di awal untuk mendapatkan array yang dimodifikasi
             const [removed] = arrayToModify.splice(substituteIndex, 1); 
-            arrayToModify.push(removed);
+            arrayToModify.push(removed); 
 
-            // B. LOGIKA PERBAIKAN (THE FIX!): Memastikan Next Scheduled Person TIDAK BERUBAH
-            // Logika ini hanya berjalan jika nama yang digeser adalah nama petugas Jumat Akan Datang (nextScheduledPerson)
+            // B. LOGIKA PERBAIKAN: Memastikan Next Scheduled Person TIDAK BERUBAH
             if (removed === nextScheduledPerson) {
-                
-                // 1. Tentukan siapa yang sekarang berada di index Next (nama yang baru saja menggantikan nextScheduledPerson)
+                // KASUS KRITIS: Nama yang digeser adalah petugas Jumat Akan Datang.
+
+                // 1. Ambil nama yang sekarang menempati posisi Next Index (nama yang salah)
                 const newNextPerson = arrayToModify[nextIndex]; 
 
-                // 2. Hapus nama pengganti yang baru saja menempati posisi Next Index (newNextPerson)
+                // 2. Hapus nama yang salah (newNextPerson) dari array
                 arrayToModify.splice(nextIndex, 1);
 
-                // 3. Kembalikan nama yang seharusnya (removed/nextScheduledPerson) ke posisi Next Index
+                // 3. Masukkan kembali nama yang benar (removed/nextScheduledPerson) ke Next Index
                 arrayToModify.splice(nextIndex, 0, removed); 
 
-                // 4. Pindahkan nama yang baru (newNextPerson) ke posisi paling akhir, menggantikan posisi removed
-                arrayToModify.pop(); // Hapus 'removed' dari akhir array
-                arrayToModify.push(newNextPerson); // Pindahkan 'newNextPerson' ke akhir array
+                // 4. Hapus nama yang salah (newNextPerson) dari akhir array (posisi removed)
+                arrayToModify.pop(); 
+                
+                // 5. Tempatkan nama yang salah (newNextPerson) ke posisi paling akhir, sesuai permintaan user.
+                arrayToModify.push(newNextPerson); 
             }
             // --- AKHIR LOGIKA PERBAIKAN ---
 
