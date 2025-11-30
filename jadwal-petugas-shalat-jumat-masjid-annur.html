@@ -223,7 +223,6 @@
         
         // --- Fungsi Penentu Tanggal (Logika Manual) ---
         function getScheduleDates(role) {
-            // Tentukan kunci penyimpanan berdasarkan peran
             let storageKey;
             if (role === 'khotib') storageKey = STORAGE_KEY_KHOTIB;
             else if (role === 'bilal') storageKey = STORAGE_KEY_BILAL;
@@ -260,7 +259,6 @@
 
         // === FUNGSI UNTUK MERENDER DAFTAR NAMA (HANYA NAMA) ===
         function renderLists() {
-            // 1. Hitung indeks dasar untuk setiap peran secara independen
             const [thisFriKhotib] = getScheduleDates('khotib');
             const [thisFriBilal] = getScheduleDates('bilal');
             const [thisFriMuadzin] = getScheduleDates('muadzin');
@@ -283,19 +281,16 @@
 
                 const scheduledIndex = item.startIndex % item.data.length;
                 
-                // --- Logika Circular Shift ---
+                // Logika Circular Shift: Memulai daftar dari scheduledIndex
                 const chronologicalRotation = [];
                 const dataLength = item.data.length;
 
-                // Ambil elemen dari indeks jadwal hingga akhir array
                 for (let i = scheduledIndex; i < dataLength; i++) {
                     chronologicalRotation.push(item.data[i]);
                 }
-                // Ambil elemen dari awal array hingga indeks sebelum jadwal
                 for (let i = 0; i < scheduledIndex; i++) {
                     chronologicalRotation.push(item.data[i]);
                 }
-                // --- Akhir Logika Circular Shift ---
                 
                 // Tampilkan array yang sudah diurutkan (chronologicalRotation)
                 chronologicalRotation.forEach((name, index) => {
@@ -303,7 +298,6 @@
                     
                     const nameSpan = document.createElement('span');
                     nameSpan.classList.add('list-name');
-                    // Hanya menampilkan nomor urut dan nama
                     nameSpan.innerText = `${index + 1}. ${name}`; 
                     
                     li.appendChild(nameSpan);
@@ -323,7 +317,7 @@
 
             const roleName = role.charAt(0).toUpperCase() + role.slice(1);
             
-            // Mengambil tanggal spesifik untuk peran ini
+            // Mengambil petugas Jumat Ini
             const [thisFri] = getScheduleDates(role); 
             const baseIndexThis = getIndexForFriday(thisFri);
             const currentIndex = baseIndexThis % arrayToUse.length;
@@ -336,6 +330,7 @@
             modalList.innerHTML = ''; 
 
             arrayToUse.forEach(name => {
+                // TIDAK menampilkan petugas Jumat Ini di daftar pilihan pengganti
                 if (name !== scheduledPerson) { 
                     const button = document.createElement('button');
                     button.innerText = name;
@@ -347,7 +342,7 @@
             document.getElementById('substituteModal').classList.add('show-modal');
         }
 
-        // === 3. Fungsi Inti: Handle Pilihan dan Geser Nama ===
+        // === 3. Fungsi Inti: Handle Pilihan dan Geser Nama (LOGIKA PERBAIKAN) ===
         function handleSubstituteSelection(role, substituteName) {
             document.getElementById('substituteModal').classList.remove('show-modal');
 
@@ -360,25 +355,47 @@
             const roleName = role.charAt(0).toUpperCase() + role.slice(1);
             const substituteIndex = arrayToModify.indexOf(substituteName);
 
-            const [thisFri] = getScheduleDates(role);
+            // Ambil data tanggal dan indeks yang tetap
+            const [thisFri, nextFri] = getScheduleDates(role);
             const baseIndexThis = getIndexForFriday(thisFri);
             const currentIndex = baseIndexThis % arrayToModify.length;
+            const nextIndex = getIndexForFriday(nextFri) % arrayToModify.length;
+
             const scheduledPerson = arrayToModify[currentIndex];
+            const nextScheduledPerson = arrayToModify[nextIndex]; // Nama yang seharusnya berada di Jumat Akan Datang!
 
-
-            if (!confirm(`Yakin menggeser ${roleName} PENGGANTI: **${substituteName}** ke urutan paling belakang? \n\nRotasi akan berubah: ${scheduledPerson} tetap di jadwal JUMAT INI, dan ${substituteName} pindah ke urutan terakhir.`)) {
+            if (!confirm(`Yakin menggeser ${roleName} PENGGANTI: **${substituteName}** ke urutan paling belakang? \n\nRotasi akan berubah: ${scheduledPerson} tetap di jadwal JUMAT INI.`)) {
                 return;
             }
 
-            // LOGIKA GESER: Hapus dari posisi saat ini, tambahkan ke akhir
+            // A. LOGIKA GESER STANDAR: Hapus dari posisi saat ini, tambahkan ke akhir
             const [removed] = arrayToModify.splice(substituteIndex, 1); 
             arrayToModify.push(removed);
+
+            // B. LOGIKA PERBAIKAN (THE FIX!): Memastikan Next Scheduled Person TIDAK BERUBAH
+            // Logika ini hanya berjalan jika nama yang digeser adalah nama petugas Jumat Akan Datang (nextScheduledPerson)
+            if (removed === nextScheduledPerson) {
+                
+                // 1. Tentukan siapa yang sekarang berada di index Next (nama yang baru saja menggantikan nextScheduledPerson)
+                const newNextPerson = arrayToModify[nextIndex]; 
+
+                // 2. Hapus nama pengganti yang baru saja menempati posisi Next Index (newNextPerson)
+                arrayToModify.splice(nextIndex, 1);
+
+                // 3. Kembalikan nama yang seharusnya (removed/nextScheduledPerson) ke posisi Next Index
+                arrayToModify.splice(nextIndex, 0, removed); 
+
+                // 4. Pindahkan nama yang baru (newNextPerson) ke posisi paling akhir, menggantikan posisi removed
+                arrayToModify.pop(); // Hapus 'removed' dari akhir array
+                arrayToModify.push(newNextPerson); // Pindahkan 'newNextPerson' ke akhir array
+            }
+            // --- AKHIR LOGIKA PERBAIKAN ---
 
             localStorage.setItem(`data_${role}`, JSON.stringify(arrayToModify));
             
             updateSchedule(); 
             
-            alert(`✅ ${roleName} ${substituteName} telah berhasil digeser ke urutan terakhir. Rotasi ${roleName} minggu depan akan menggunakan urutan baru.`);
+            alert(`✅ ${roleName} ${substituteName} telah berhasil digeser ke urutan terakhir. Jadwal utama Jumat Ini/Akan Datang telah dipertahankan.`);
         }
 
         // === 4. FUNGSI KONFIRMASI JADWAL SELESAI (Manual Advance Per Role) ===
@@ -416,7 +433,7 @@
 
         function updateSchedule() {
             updateClock();
-            loadDataFromStorage(); // Memastikan data array terbaru selalu dimuat
+            loadDataFromStorage();
             renderLists(); 
 
             // Hitung jadwal untuk KHOTIB (Independent)
