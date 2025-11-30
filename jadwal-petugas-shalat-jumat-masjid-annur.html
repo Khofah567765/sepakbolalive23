@@ -5,198 +5,343 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jadwal Petugas Masjid Annur (Rotasi Independen)</title>
   <link rel="icon" href="favicon2.png" type="image/png">
-  <style>
-    /* Styling Dasar dan Layout */
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f3f4f6; color: #2d3748; }
-    .logo-header { display: flex; align-items: center; padding: 20px; background-color: #ffffff; border-bottom: 1px solid #ddd; border-radius: 12px; }
-    .logo-img { height: 90px; margin-right: 10px; }
-    .logo-title { font-size: 18px; color: #333; margin: 0; text-align: center; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 20px; font-weight: bold; }
-    .clock { font-size: 16px; color: #000; text-align: center; }
-    h1 { text-align: center; color: #2b6cb0; font-size: 20px; margin-bottom: 10px; margin-top: 10px; font-weight: bold; }
-    h2 { font-size: 14px; color: #000; }
-    h3 { font-size: 20px; color: #000; text-align: left; }
-    .table-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; align-items: center; }
-    .card { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); padding: 20px; transition: 0.3s; }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
-    .card h2 { margin: 0 0 10px; color: #2f855a; font-size: 20px; text-align: center; }
-    .role-block { margin-bottom: 12px; padding: 10px; background-color: #edf2f7; border-radius: 8px; text-align: center; }
-    .role-title { font-weight: bold; color: #2d3748; font-size: 18px; margin-bottom: 4px; }
-    .role-name { color: #1a202c; font-size: 18px; margin-bottom: 5px; }
-    
-    /* Styling Tombol Adjustment (Geser Pengganti) */
-    .adjustment-button { padding: 5px 10px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: background-color 0.3s; width: 100%; margin-top: 8px; }
-    .adjustment-button:hover { background-color: #0056b3; }
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-    /* Styling Tombol Konfirmasi Selesai */
-    .complete-button {
-        padding: 5px 10px;
-        background-color: #2f855a; 
-        color: white;
+    /* Palet Warna Tema Gelap */
+    :root {
+        --bg-color: #1a1b26;
+        --card-bg-color: #24283b;
+        --text-color: #c0caf5;
+        --text-color-light: #a9b1d6;
+        --border-color: #414868;
+        --primary-color: #7aa2f7; /* Biru Primer */
+        --primary-color-hover: #567de4;
+        --secondary-color: #565f89; /* Abu-abu Sekunder */
+        --secondary-color-hover: #414868;
+        --success-color: #73daca; /* Hijau Sukses */
+        --success-color-hover: #50c4a4;
+        --danger-color: #f7768e;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        padding: 20px; /* Padding dipindahkan ke body/container */
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 20px;
+    }
+    
+    /* --- HEADER & CLOCK (Disesuaikan) --- */
+    .logo-header { 
+        display: flex; 
+        align-items: center; 
+        padding: 20px; 
+        background-color: var(--card-bg-color); /* Warna card baru */
+        border-bottom: 1px solid var(--border-color); 
+        border-radius: 12px; 
+        margin-bottom: 20px;
+    }
+    .logo-img { 
+        height: 60px; /* Dikecilkan sedikit agar serasi */
+        margin-right: 15px; 
+    }
+    .logo-title { 
+        font-size: 20px; 
+        color: var(--text-color); 
+        margin: 0; 
+        font-weight: 600;
+    }
+    .header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-top: 10px; 
+        margin-bottom: 20px; 
+        font-weight: 500;
+    }
+    .clock { 
+        font-size: 16px; 
+        color: var(--success-color); 
+        text-align: center; 
+    }
+    h1 { 
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--primary-color); 
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    h2 { 
+        font-size: 20px; 
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    h3 { 
+        font-size: 22px; 
+        color: var(--text-color); 
+        text-align: left; 
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    /* --- DASHBOARD GRID & SECTION (Dari CSS Baru) --- */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        align-items: start;
+    }
+    .dashboard-section {
+        background-color: var(--card-bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 25px;
+        transition: box-shadow 0.2s ease;
+    }
+    .dashboard-section:hover {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    /* --- Role Block (Disesuaikan agar serasi dengan card baru) --- */
+    .role-block { 
+        margin-bottom: 15px; 
+        padding: 15px; 
+        background-color: #2e334f; /* Warna latar belakang role block */
+        border-radius: 8px; 
+        text-align: center; 
+        border: 1px solid var(--border-color);
+    }
+    .role-title { 
+        font-weight: 600; 
+        color: var(--text-color-light); 
+        font-size: 16px; 
+        margin-bottom: 5px; 
+    }
+    .role-name { 
+        color: var(--text-color); 
+        font-size: 18px; 
+        margin-bottom: 10px; 
+        font-weight: 500;
+    }
+    
+    /* --- Tombol (Menggunakan kelas .btn dari CSS Baru) --- */
+    .btn {
+        padding: 10px 20px;
         border: none;
         border-radius: 6px;
+        color: #fff;
         cursor: pointer;
-        font-size: 12px;
-        font-weight: bold;
-        transition: background-color 0.3s;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        display: block; /* Agar tombol menjadi satu baris penuh */
         width: 100%;
+        margin-top: 8px;
+    }
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+    .btn-secondary { /* Untuk GESER PENGGANTI */
+        background-color: var(--primary-color);
+    }
+    .btn-secondary:hover {
+        background-color: var(--primary-color-hover);
+    }
+    .btn-approve { /* Untuk KONFIRMASI SELESAI */
+        background-color: var(--success-color);
+        color: var(--bg-color); /* Ubah warna teks agar kontras di latar hijau muda */
+    }
+    .btn-approve:hover {
+        background-color: var(--success-color-hover);
+    }
+
+    /* --- Daftar Nama (Disesuaikan) --- */
+    .list-section { 
+        display: flex; 
+        flex-wrap: wrap; 
+        gap: 20px; /* Jarak antar kolom daftar */
+        justify-content: start; 
+        margin-top: 30px;
+    }
+    .list-group { 
+        background: var(--card-bg-color); 
+        border-radius: 12px; 
+        padding: 20px; 
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05); 
+        width: 100%;
+        max-width: 350px; /* Batasi lebar daftar */
+        border: 1px solid var(--border-color);
+    }
+    .styled-list { 
+        padding-left: 0; 
+        margin: 0; 
+        list-style-type: none; 
         margin-top: 5px;
     }
-    .complete-button:hover {
-        background-color: #246545;
+    .styled-list li { 
+        margin-bottom: 5px; 
+        padding: 5px 0;
+        border-bottom: 1px dashed var(--border-color);
+        display: flex; 
+        justify-content: space-between;
     }
-    
-    /* Styling Daftar Nama */
-    .list-section { display: flex; flex-wrap: wrap; gap: 5px; justify-content: start; }
-    .list-group { background: white; border-radius: 12px; padding: 15px 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); width: 250px; }
-    .list-group h2 { font-size: 1.1rem; margin-bottom: 5px; color: #226644; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-    .styled-list { padding-left: 5px; margin: 0; padding-bottom: 5px; list-style-type: none; }
-    .styled-list li { margin-bottom: 5px; display: flex; justify-content: space-between;}
-    .styled-list .list-name { font-weight: 500; }
-    .styled-list .list-date { font-weight: 300; font-size: 0.9em; color: #777; }
+    .styled-list li:last-child {
+        border-bottom: none;
+    }
+    .styled-list .list-name { 
+        font-weight: 500; 
+        color: var(--text-color);
+    }
 
-
-    /* === CSS Modal Pilihan Nama === */
+    /* === Modal Styles (Disesuaikan agar serasi dengan card baru) === */
     .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        visibility: hidden; 
-        opacity: 0;
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; 
+        align-items: center; z-index: 1000; visibility: hidden; opacity: 0;
         transition: visibility 0s, opacity 0.3s;
     }
     .modal-content {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        max-width: 90%;
-        width: 350px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        background: var(--card-bg-color); 
+        padding: 25px; border-radius: 10px; max-width: 90%; width: 350px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     }
     .modal-list button {
-        display: block;
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 8px;
-        background-color: #f3f4f6;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        text-align: center;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.2s;
+        display: block; width: 100%; padding: 10px; margin-bottom: 8px;
+        background-color: #2e334f; border: 1px solid var(--border-color);
+        border-radius: 5px; text-align: center; cursor: pointer; font-size: 16px;
+        color: var(--text-color); transition: background-color 0.2s;
     }
     .modal-list button:hover {
-        background-color: #e2e8f0;
+        background-color: var(--secondary-color);
     }
     .modal-header {
-        font-weight: bold;
-        margin-bottom: 15px;
-        font-size: 1.2rem;
-        color: #333;
-        text-align: center;
+        font-weight: 600; margin-bottom: 15px; font-size: 1.2rem;
+        color: var(--primary-color); text-align: center;
     }
     .show-modal {
-        visibility: visible;
-        opacity: 1;
+        visibility: visible; opacity: 1;
+    }
+
+    /* Media Query untuk Tampilan Mobile */
+    @media (max-width: 650px) {
+        body { padding: 10px; }
+        .logo-header { flex-direction: column; text-align: center; }
+        .logo-title { margin-top: 10px; font-size: 18px; }
+        .header { flex-direction: column; align-items: center; }
+        .list-section { flex-direction: column; align-items: center; }
+        .list-group { max-width: 100%; }
     }
   </style>
 </head>
 <body>
-  <header class="logo-header">
-    <img src="favicon2.png" alt="Logo Masjid" class="logo-img">
-    <h1 class="logo-title">JADWAL PETUGAS SHOLAT JUMAT MASJID ANNUR</h1>
-  </header>
-
-  <div class="header">
-    <div class="clock" id="clock">Memuat waktu...</div>
-  </div>
-<iframe src="Jadwalsholat.html" width="380" height="320" scrolling="no" style="border: none;"></iframe>
-
-  <div class="table-container">
-    <div class="card">
-      <h2>JUMAT INI (Manual Konfirmasi Per Kolom)</h2>
-      
-            <div class="role-block">
-        <div class="role-title">KHOTIB</div>
-        <div class="role-name" id="khotibThis"></div>
-        <button onclick="showNameSelection('khotib')" class="adjustment-button">GESER PENGGANTI KHOTIB</button>
-        <button onclick="confirmScheduleComplete('khotib')" class="complete-button">KONFIRMASI JADWAL SELESAI</button>
-      </div>
-
-            <div class="role-block">
-        <div class="role-title">BILAL</div>
-        <div class="role-name" id="bilalThis"></div>
-        <button onclick="showNameSelection('bilal')" class="adjustment-button">GESER PENGGANTI BILAL</button>
-        <button onclick="confirmScheduleComplete('bilal')" class="complete-button">KONFIRMASI JADWAL SELESAI</button>
-      </div>
-
-            <div class="role-block">
-        <div class="role-title">MUADZIN</div>
-        <div class="role-name" id="muadzinThis"></div>
-        <button onclick="showNameSelection('muadzin')" class="adjustment-button">GESER PENGGANTI MUADZIN</button>
-        <button onclick="confirmScheduleComplete('muadzin')" class="complete-button">KONFIRMASI JADWAL SELESAI</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>JUMAT AKAN DATANG</h2>
-      
-      <div class="role-block">
-        <div class="role-title">KHOTIB</div>
-        <div class="role-name" id="khotibNext"></div>
-      </div>
-
-      <div class="role-block">
-        <div class="role-title">BILAL</div>
-        <div class="role-name" id="bilalNext"></div>
-      </div>
-
-      <div class="role-block">
-        <div class="role-title">MUADZIN</div>
-        <div class="role-name" id="muadzinNext"></div>
-      </div>
-    </div>
-  </div>
   
-  <h2 style="text-align: center; margin-top: 30px;">JADWAL MAJU KE MINGGU DEPAN HANYA SETELAH TOMBOL KONFIRMASI PER KOLOM DIKLIK</h2>
-  
-  <section class="list-section">
-    <div class="list-group">
-      <h3>DAFTAR NAMA PETUGAS</h3>
-      
-      <h2>KHOTIB (Urutan Rotasi)</h2>
-      <ul id="khotibList" class="styled-list">
-        </ul>
-      
-      <h2>BILAL (Urutan Rotasi)</h2>
-      <ul id="bilalList" class="styled-list">
-        </ul>
-      
-      <h2>MUADZIN (Urutan Rotasi)</h2>      
-      <ul id="muadzinList" class="styled-list">
-        </ul>
+  <div class="container">
+    
+    <header class="logo-header">
+      <img src="favicon2.png" alt="Logo Masjid" class="logo-img">
+      <h1 class="logo-title">JADWAL PETUGAS SHOLAT JUMAT MASJID ANNUR</h1>
+    </header>
+
+    <div class="header">
+      <div class="clock" id="clock">Memuat waktu...</div>
     </div>
-  </section>
+    
+        <iframe src="Jadwalsholat.html" width="380" height="320" scrolling="no" style="border: none; margin-bottom: 20px;"></iframe>
 
-  <div id="substituteModal" class="modal-overlay">
-      <div class="modal-content">
-          <div id="modalHeader" class="modal-header">Pilih Petugas Pengganti</div>
-          <div id="modalList" class="modal-list">
-              </div>
-          <button onclick="document.getElementById('substituteModal').classList.remove('show-modal')" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #ccc; border: none; border-radius: 5px;">Batal</button>
+        <div class="dashboard-grid">
+      
+            <div class="dashboard-section">
+        <h2>JUMAT INI (Manual Konfirmasi Per Kolom)</h2>
+        
+                <div class="role-block">
+          <div class="role-title">KHOTIB</div>
+          <div class="role-name" id="khotibThis"></div>
+          <button onclick="showNameSelection('khotib')" class="btn btn-secondary">GESER PENGGANTI KHOTIB</button>
+          <button onclick="confirmScheduleComplete('khotib')" class="btn btn-approve">KONFIRMASI JADWAL SELESAI</button>
+        </div>
+
+                <div class="role-block">
+          <div class="role-title">BILAL</div>
+          <div class="role-name" id="bilalThis"></div>
+          <button onclick="showNameSelection('bilal')" class="btn btn-secondary">GESER PENGGANTI BILAL</button>
+          <button onclick="confirmScheduleComplete('bilal')" class="btn btn-approve">KONFIRMASI JADWAL SELESAI</button>
+        </div>
+
+                <div class="role-block">
+          <div class="role-title">MUADZIN</div>
+          <div class="role-name" id="muadzinThis"></div>
+          <button onclick="showNameSelection('muadzin')" class="btn btn-secondary">GESER PENGGANTI MUADZIN</button>
+          <button onclick="confirmScheduleComplete('muadzin')" class="btn btn-approve">KONFIRMASI JADWAL SELESAI</button>
+        </div>
       </div>
-  </div>
 
+            <div class="dashboard-section">
+        <h2>JUMAT AKAN DATANG</h2>
+        
+        <div class="role-block">
+          <div class="role-title">KHOTIB</div>
+          <div class="role-name" id="khotibNext"></div>
+        </div>
 
-  <script>
+        <div class="role-block">
+          <div class="role-title">BILAL</div>
+          <div class="role-name" id="bilalNext"></div>
+        </div>
+
+        <div class="role-block">
+          <div class="role-title">MUADZIN</div>
+          <div class="role-name" id="muadzinNext"></div>
+        </div>
+      </div>
+    </div>
+    
+    <h2 style="text-align: center; margin-top: 30px; color: var(--text-color-light);">
+      JADWAL MAJU KE MINGGU DEPAN HANYA SETELAH TOMBOL KONFIRMASI PER KOLOM DIKLIK
+    </h2>
+    
+        <section class="list-section">
+      
+      <div class="list-group">
+        <h3>DAFTAR NAMA PETUGAS</h3>
+        
+        <h2>KHOTIB (Urutan Rotasi)</h2>
+        <ul id="khotibList" class="styled-list"></ul>
+      </div>
+      
+      <div class="list-group">
+        <h2>BILAL (Urutan Rotasi)</h2>
+        <ul id="bilalList" class="styled-list"></ul>
+      </div>
+      
+      <div class="list-group">
+        <h2>MUADZIN (Urutan Rotasi)</h2>      
+        <ul id="muadzinList" class="styled-list"></ul>
+      </div>
+    </section>
+
+        <div id="substituteModal" class="modal-overlay">
+        <div class="modal-content">
+            <div id="modalHeader" class="modal-header">Pilih Petugas Pengganti</div>
+            <div id="modalList" class="modal-list"></div>
+            <button onclick="document.getElementById('substituteModal').classList.remove('show-modal')" class="btn btn-secondary" style="margin-top: 15px;">Batal</button>
+        </div>
+    </div>
+
+  </div>   <script>
     // === Data Petugas (Menggunakan LET untuk memungkinkan perubahan urutan) ===
     let khotib = ["K. M. MUNIR", "Ust. ZAINI", "Ust. A. FIRDAUSI", "Ust. A. JUNAIDI"];
     let bilal = ["Ust. MUHTADI", "MISDI", "ARIF RAHMAN HAKIM", "MISTUM", "Ust. SYAIFUL"];
@@ -334,7 +479,7 @@
             return;
         }
 
-        // --- LOGIKA GESER ---
+        // --- LOGIKA GESER (Sama untuk semua peran) ---
         const [removed] = arrayToModify.splice(substituteIndex, 1); 
         arrayToModify.push(removed);
         // --- AKHIR LOGIKA GESER ---
@@ -409,6 +554,7 @@
         document.getElementById("muadzinNext").innerText = muadzin[indexNextMuadzin % muadzin.length];
     }
 
+    // Mulai update setiap detik
     setInterval(updateSchedule, 1000);
     updateSchedule(); 
 </script>
