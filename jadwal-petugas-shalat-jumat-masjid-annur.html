@@ -366,6 +366,7 @@
                 return;
             }
 
+            // LOGIKA GESER: Hapus dari posisi saat ini, tambahkan ke akhir
             const [removed] = arrayToModify.splice(substituteIndex, 1); 
             arrayToModify.push(removed);
 
@@ -386,15 +387,15 @@
             else if (role === 'muadzin') storageKey = STORAGE_KEY_MUADZIN;
             else return;
 
-            const [thisFri] = getScheduleDates(role); // Menggunakan fungsi baru untuk mendapatkan tanggal Jumat yang dikonfirmasi
+            const [thisFri] = getScheduleDates(role); 
             const dateString = thisFri.toISOString();
             
             if (!confirm(`Konfirmasi: Apakah tugas ${roleName} untuk Jumat ini sudah SELESAI? \n\nMengklik OK akan memajukan jadwal ${roleName} ke Minggu Berikutnya.`)) {
                 return;
             }
 
-            localStorage.setItem(storageKey, dateString); // Menyimpan per role
-            updateSchedule(); // Update seluruh tampilan
+            localStorage.setItem(storageKey, dateString); 
+            updateSchedule(); 
             alert(`Jadwal ${roleName} sukses dimajukan! Petugas berikutnya sudah ditampilkan.`);
         }
 
@@ -413,17 +414,17 @@
             updateClock();
             renderLists(); 
 
-            // Hitung jadwal untuk KHOTIB
+            // Hitung jadwal untuk KHOTIB (Independent)
             const [thisFriKhotib, nextFriKhotib] = getScheduleDates('khotib');
             const indexThisKhotib = getIndexForFriday(thisFriKhotib);
             const indexNextKhotib = getIndexForFriday(nextFriKhotib);
 
-            // Hitung jadwal untuk BILAL
+            // Hitung jadwal untuk BILAL (Independent)
             const [thisFriBilal, nextFriBilal] = getScheduleDates('bilal');
             const indexThisBilal = getIndexForFriday(thisFriBilal);
             const indexNextBilal = getIndexForFriday(nextFriBilal);
 
-            // Hitung jadwal untuk MUADZIN
+            // Hitung jadwal untuk MUADZIN (Independent)
             const [thisFriMuadzin, nextFriMuadzin] = getScheduleDates('muadzin');
             const indexThisMuadzin = getIndexForFriday(thisFriMuadzin);
             const indexNextMuadzin = getIndexForFriday(nextFriMuadzin);
