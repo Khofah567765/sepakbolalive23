@@ -1,394 +1,446 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jadwal Petugas Masjid Annur (Tampilan Awal)</title>
-  <link rel="icon" href="favicon2.png" type="image/png">
-  <style>
-    /* --- CSS Awal (Tema Terang) --- */
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f3f4f6; color: #2d3748; }
-    .logo-header { display: flex; align-items: center; padding: 20px; background-color: #ffffff; border-bottom: 1px solid #ddd; border-radius: 12px; }
-    .logo-img { height: 90px; margin-right: 10px; }
-    .logo-title { font-size: 18px; color: #333; margin: 0; text-align: center; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 20px; font-weight: bold; }
-    .clock { font-size: 16px; color: #000; text-align: center; }
-    h1 { text-align: center; color: #2b6cb0; font-size: 20px; margin-bottom: 10px; margin-top: 10px; font-weight: bold; }
-    h2 { font-size: 14px; color: #000; }
-    h3 { font-size: 20px; color: #000; text-align: left; }
-    .table-container { 
-        display: grid; 
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-        gap: 20px; 
-        align-items: center; 
-    }
-    .card { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); padding: 20px; transition: 0.3s; }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
-    .card h2 { margin: 0 0 10px; color: #2f855a; font-size: 20px; text-align: center; }
-    .role-block { margin-bottom: 12px; padding: 10px; background-color: #edf2f7; border-radius: 8px; text-align: center; }
-    .role-title { font-weight: bold; color: #2d3748; font-size: 18px; margin-bottom: 4px; }
-    .role-name { color: #1a202c; font-size: 18px; margin-bottom: 5px; }
-    
-    /* Styling Tombol Adjustment (Geser Pengganti) */
-    .adjustment-button { padding: 5px 10px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: background-color 0.3s; width: 100%; margin-top: 8px; }
-    .adjustment-button:hover { background-color: #0056b3; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masjid Annur - Jadwal Petugas Jumat</title>
+    <link rel="icon" href="favicon2.png" type="image/png">
+    <style>
+        /* Styling Dasar dan Layout */
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f3f4f6; color: #2d3748; }
+        .logo-header { display: flex; align-items: center; padding: 20px; background-color: #ffffff; border-bottom: 1px solid #ddd; border-radius: 12px; }
+        .logo-img { height: 90px; margin-right: 10px; }
+        .logo-title { font-size: 18px; color: #333; margin: 0; text-align: center; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 20px; font-weight: bold; }
+        .clock { font-size: 16px; color: #000; text-align: center; }
+        h1 { text-align: center; color: #2b6cb0; font-size: 20px; margin-bottom: 10px; margin-top: 10px; font-weight: bold; }
+        h2 { font-size: 14px; color: #000; }
+        h3 { font-size: 20px; color: #000; text-align: left; }
+        .table-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; align-items: center; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); padding: 20px; transition: 0.3s; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
+        .card h2 { margin: 0 0 10px; color: #2f855a; font-size: 20px; text-align: center; }
+        .role-block { margin-bottom: 12px; padding: 10px; background-color: #edf2f7; border-radius: 8px; text-align: center; }
+        .role-title { font-weight: bold; color: #2d3748; font-size: 18px; margin-bottom: 4px; }
+        .role-name { color: #1a202c; font-size: 18px; margin-bottom: 5px; }
+        
+        /* Styling Tombol Adjustment (Geser Pengganti) */
+        .adjustment-button { padding: 5px 10px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: background-color 0.3s; width: 100%; margin-top: 8px; }
+        .adjustment-button:hover { background-color: #0056b3; }
 
-    /* Styling Tombol Konfirmasi Selesai */
-    .complete-button {
-        padding: 5px 10px;
-        background-color: #2f855a; 
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: bold;
-        transition: background-color 0.3s;
-        width: 100%;
-        margin-top: 5px;
-    }
-    .complete-button:hover {
-        background-color: #246545;
-    }
-    
-    /* Styling Daftar Nama */
-    .list-section { display: flex; flex-wrap: wrap; gap: 5px; justify-content: start; }
-    .list-group { background: white; border-radius: 12px; padding: 15px 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); width: 250px; }
-    .list-group h2 { font-size: 1.1rem; margin-bottom: 5px; color: #226644; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-    .styled-list { padding-left: 5px; margin: 0; padding-bottom: 5px; list-style-type: none; }
-    .styled-list li { margin-bottom: 5px; display: flex; justify-content: space-between;}
-    .styled-list .list-name { font-weight: 500; }
-    .styled-list .list-date { font-weight: 300; font-size: 0.9em; color: #777; }
+        /* Styling Tombol Konfirmasi Selesai */
+        .complete-button {
+            padding: 5px 10px;
+            background-color: #2f855a; 
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 5px;
+        }
+        .complete-button:hover {
+            background-color: #246545;
+        }
+        
+        /* Styling Daftar Nama */
+        .list-section { display: flex; flex-wrap: wrap; gap: 5px; justify-content: start; }
+        .list-group { background: white; border-radius: 12px; padding: 15px 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); width: 250px; }
+        .list-group h2 { font-size: 1.1rem; margin-bottom: 5px; color: #226644; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .styled-list { padding-left: 5px; margin: 0; padding-bottom: 5px; list-style-type: none; }
+        .styled-list li { margin-bottom: 5px; display: flex; justify-content: space-between;}
+        .styled-list .list-name { font-weight: 500; }
+        .styled-list .list-date { font-weight: 300; font-size: 0.9em; color: #777; }
 
 
-    /* === CSS Modal Pilihan Nama === */
-    .modal-overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7);
-        display: flex; justify-content: center; align-items: center; z-index: 1000;
-        visibility: hidden; opacity: 0; transition: visibility 0s, opacity 0.3s;
-    }
-    .modal-content {
-        background: white; padding: 20px; border-radius: 10px; max-width: 90%;
-        width: 350px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .modal-list button {
-        display: block; width: 100%; padding: 10px; margin-bottom: 8px;
-        background-color: #f3f4f6; border: 1px solid #ddd; border-radius: 5px;
-        text-align: center; cursor: pointer; font-size: 16px; transition: background-color 0.2s;
-    }
-    .modal-list button:hover {
-        background-color: #e2e8f0;
-    }
-    .modal-header {
-        font-weight: bold; margin-bottom: 15px; font-size: 1.2rem;
-        color: #333; text-align: center;
-    }
-    .show-modal {
-        visibility: visible; opacity: 1;
-    }
-  </style>
+        /* === CSS Modal Pilihan Nama === */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden; 
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 90%;
+            width: 350px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .modal-list button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: #f3f4f6;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+        .modal-list button:hover {
+            background-color: #e2e8f0;
+        }
+        .modal-header {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #333;
+            text-align: center;
+        }
+        .show-modal {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
-  
-  <header class="logo-header">
-    <img src="favicon2.png" alt="Logo Masjid" class="logo-img">
-    <h1 class="logo-title">JADWAL PETUGAS SHOLAT JUMAT MASJID ANNUR</h1>
-  </header>
+    <header class="logo-header">
+        <img src="favicon2.png" alt="Logo Masjid" class="logo-img">
+        <h1 class="logo-title">JADWAL PETUGAS SHOLAT JUMAT MASJID ANNUR</h1>
+    </header>
 
-  <div class="header">
-    <div class="clock" id="clock">Memuat waktu...</div>
-  </div>
+    <div class="header">
+        <div class="clock" id="clock">Memuat waktu...</div>
+    </div>
 <iframe src="Jadwalsholat.html" width="380" height="320" scrolling="no" style="border: none;"></iframe>
 
-  <div class="table-container">
-    <div class="card">
-      <h2>JUMAT INI (Manual Konfirmasi Per Kolom)</h2>
-      
-      <div class="role-block">
-        <div class="role-title">KHOTIB</div>
-        <div class="role-name" id="khotibThis"></div>
-        <button onclick="showNameSelection('khotib')" class="adjustment-button">GESER PENGGANTI KHOTIB</button>
-        <button onclick="confirmScheduleComplete('khotib')" class="complete-button">KONFIRMASI JADWAL SELESAI</button>
-      </div>
+    <div class="table-container">
+        <div class="card">
+            <h2>JUMAT INI (Manual Konfirmasi)</h2>
+            
+            <div class="role-block">
+                <div class="role-title">KHOTIB</div>
+                <div class="role-name" id="khotibThis"></div>
+                <button onclick="showNameSelection('khotib')" class="adjustment-button">GESER PENGGANTI KHOTIB</button>
+                <button onclick="confirmScheduleComplete('khotib')" class="complete-button">KONFIRMASI JADWAL SELESAI</button>
+            </div>
 
-      <div class="role-block">
-        <div class="role-title">BILAL</div>
-        <div class="role-name" id="bilalThis"></div>
-        <button onclick="showNameSelection('bilal')" class="adjustment-button">GESER PENGGANTI BILAL</button>
-        <button onclick="confirmScheduleComplete('bilal')" class="complete-button">KONFIRMASI JADWAL SELESAI</button>
-      </div>
+            <div class="role-block">
+                <div class="role-title">BILAL</div>
+                <div class="role-name" id="bilalThis"></div>
+                <button onclick="showNameSelection('bilal')" class="adjustment-button">GESER PENGGANTI BILAL</button>
+                <button onclick="confirmScheduleComplete('bilal')" class="complete-button">KONFIRMASI JADWAL SELESAI</button>
+            </div>
 
-      <div class="role-block">
-        <div class="role-title">MUADZIN</div>
-        <div class="role-name" id="muadzinThis"></div>
-        <button onclick="showNameSelection('muadzin')" class="adjustment-button">GESER PENGGANTI MUADZIN</button>
-        <button onclick="confirmScheduleComplete('muadzin')" class="complete-button">KONFIRMASI JADWAL SELESAI</button>
-      </div>
-    </div>
+            <div class="role-block">
+                <div class="role-title">MUADZIN</div>
+                <div class="role-name" id="muadzinThis"></div>
+                <button onclick="showNameSelection('muadzin')" class="adjustment-button">GESER PENGGANTI MUADZIN</button>
+                <button onclick="confirmScheduleComplete('muadzin')" class="complete-button">KONFIRMASI JADWAL SELESAI</button>
+            </div>
+        </div>
 
-    <div class="card">
-      <h2>JUMAT AKAN DATANG</h2>
-      
-      <div class="role-block">
-        <div class="role-title">KHOTIB</div>
-        <div class="role-name" id="khotibNext"></div>
-      </div>
+        <div class="card">
+            <h2>JUMAT AKAN DATANG</h2>
+            
+            <div class="role-block">
+                <div class="role-title">KHOTIB</div>
+                <div class="role-name" id="khotibNext"></div>
+            </div>
 
-      <div class="role-block">
-        <div class="role-title">BILAL</div>
-        <div class="role-name" id="bilalNext"></div>
-      </div>
+            <div class="role-block">
+                <div class="role-title">BILAL</div>
+                <div class="role-name" id="bilalNext"></div>
+            </div>
 
-      <div class="role-block">
-        <div class="role-title">MUADZIN</div>
-        <div class="role-name" id="muadzinNext"></div>
-      </div>
-    </div>
-  </div>
-  
-  <h2 style="text-align: center; margin-top: 30px;">JADWAL MAJU KE MINGGU DEPAN HANYA SETELAH TOMBOL KONFIRMASI PER KOLOM DIKLIK</h2>
-  
-  <section class="list-section">
-    <div class="list-group">
-      <h3>DAFTAR NAMA PETUGAS</h3>
-      
-      <h2>KHOTIB (Urutan Rotasi)</h2>
-      <ul id="khotibList" class="styled-list"></ul>
-    </div>
-    
-    <div class="list-group">
-      <h2>BILAL (Urutan Rotasi)</h2>
-      <ul id="bilalList" class="styled-list"></ul>
-    </div>
-    
-    <div class="list-group">
-      <h2>MUADZIN (Urutan Rotasi)</h2>      
-      <ul id="muadzinList" class="styled-list"></ul>
-    </div>
-  </section>
+            <div class="role-block">
+                <div class="role-title">MUADZIN</div>
+                <div class="role-name" id="muadzinNext"></div>
+            </div>
+        </div>
+    </div>
+    
+    <h2 style="text-align: center; margin-top: 30px;">JADWAL MAJU KE MINGGU DEPAN HANYA SETELAH TOMBOL KONFIRMASI DIKLIK</h2>
+    
+    <section class="list-section">
+        <div class="list-group">
+            <h3>DAFTAR NAMA PETUGAS</h3>
+            
+            <h2>KHOTIB (Urutan Rotasi)</h2>
+            <ul id="khotibList" class="styled-list">
+                </ul>
+            
+            <h2>BILAL (Urutan Rotasi)</h2>
+            <ul id="bilalList" class="styled-list">
+                </ul>
+            
+            <h2>MUADZIN (Urutan Rotasi)</h2>        
+            <ul id="muadzinList" class="styled-list">
+                </ul>
+        </div>
+    </section>
 
-  <div id="substituteModal" class="modal-overlay">
-      <div class="modal-content">
-          <div id="modalHeader" class="modal-header">Pilih Petugas Pengganti</div>
-          <div id="modalList" class="modal-list"></div>
-          <button onclick="document.getElementById('substituteModal').classList.remove('show-modal')" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #ccc; border: none; border-radius: 5px;">Batal</button>
-      </div>
-  </div>
-
-
-  <script>
-    // === Data Petugas (Menggunakan LET untuk memungkinkan perubahan urutan) ===
-    let khotib = ["K. M. MUNIR", "Ust. ZAINI", "Ust. A. FIRDAUSI", "Ust. A. JUNAIDI"];
-    let bilal = ["Ust. MUHTADI", "MISDI", "ARIF RAHMAN HAKIM", "MISTUM", "Ust. SYAIFUL"];
-    let muadzin = ["SUNAHWAN", "ALFIN", "AMIL YORDAN"];
-    
-    // Kunci Penyimpanan untuk Indeks Rotasi Per Kolom (LOGIKA BARU)
-    const STORAGE_KEY_INDEX_KHOTIB = 'index_khotib';
-    const STORAGE_KEY_INDEX_BILAL = 'index_bilal';
-    const STORAGE_KEY_INDEX_MUADZIN = 'index_muadzin';
-    
-    // Kunci Penyimpanan untuk Urutan Petugas (Geser Pengganti)
-    const STORAGE_KEY_DATA_KHOTIB = 'data_khotib';
-    const STORAGE_KEY_DATA_BILAL = 'data_bilal';
-    const STORAGE_KEY_DATA_MUADZIN = 'data_muadzin';
+    <div id="substituteModal" class="modal-overlay">
+        <div class="modal-content">
+            <div id="modalHeader" class="modal-header">Pilih Petugas Pengganti</div>
+            <div id="modalList" class="modal-list">
+                </div>
+            <button onclick="document.getElementById('substituteModal').classList.remove('show-modal')" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #ccc; border: none; border-radius: 5px;">Batal</button>
+        </div>
+    </div>
 
 
-    // === 1. Load Data dari LocalStorage ===
-    function loadDataFromStorage() {
-        const roles = [
-            { name: 'khotib', array: khotib, key: STORAGE_KEY_DATA_KHOTIB },
-            { name: 'bilal', array: bilal, key: STORAGE_KEY_DATA_BILAL },
-            { name: 'muadzin', array: muadzin, key: STORAGE_KEY_DATA_MUADZIN }
-        ];
+    <script>
+        // === Data Petugas (Menggunakan LET untuk memungkinkan perubahan urutan) ===
+        let khotib = ["K. M. MUNIR", "Ust. ZAINI", "Ust. A. FIRDAUSI", "Ust. A. JUNAIDI"];
+        let bilal = ["Ust. MUHTADI", "MISDI", "ARIF RAHMAN HAKIM", "MISTUM", "Ust. SYAIFUL"];
+        let muadzin = ["SUNAHWAN", "ALFIN", "AMIL YORDAN"];
+        
+        // Kunci Penyimpanan untuk Mode Manual (Per Role)
+        const STORAGE_KEY_KHOTIB = 'last_completed_friday_khotib';
+        const STORAGE_KEY_BILAL = 'last_completed_friday_bilal';
+        const STORAGE_KEY_MUADZIN = 'last_completed_friday_muadzin';
 
-        roles.forEach(role => {
-            const storedData = localStorage.getItem(role.key);
-            if (storedData) {
-                if (role.name === 'khotib') khotib = JSON.parse(storedData);
-                else if (role.name === 'bilal') bilal = JSON.parse(storedData);
-                else if (role.name === 'muadzin') muadzin = JSON.parse(storedData);
-            }
-        });
-    }
-    loadDataFromStorage();
-    
-    // === FUNGSI BANTUAN: Mendapatkan Indeks Rotasi Saat Ini (LOGIKA BARU) ===
-    function getCurrentRotationIndex(role) {
-        let storageKey;
-        if (role === 'khotib') storageKey = STORAGE_KEY_INDEX_KHOTIB;
-        else if (role === 'bilal') storageKey = STORAGE_KEY_INDEX_BILAL;
-        else if (role === 'muadzin') storageKey = STORAGE_KEY_INDEX_MUADZIN;
-        
-        return parseInt(localStorage.getItem(storageKey) || 0);
-    }
+        // === 1. Load Data dari LocalStorage ===
+        function loadDataFromStorage() {
+            const roles = ['khotib', 'bilal', 'muadzin'];
+            roles.forEach(role => {
+                const storedData = localStorage.getItem(`data_${role}`);
+                if (storedData) {
+                    if (role === 'khotib') khotib = JSON.parse(storedData);
+                    else if (role === 'bilal') bilal = JSON.parse(storedData);
+                    else if (role === 'muadzin') muadzin = JSON.parse(storedData);
+                }
+            });
+        }
+        loadDataFromStorage();
+        
+        // --- Fungsi Penentu Tanggal (Logika Manual) ---
+        function getScheduleDates(role) {
+            // Tentukan kunci penyimpanan berdasarkan peran
+            let storageKey;
+            if (role === 'khotib') storageKey = STORAGE_KEY_KHOTIB;
+            else if (role === 'bilal') storageKey = STORAGE_KEY_BILAL;
+            else if (role === 'muadzin') storageKey = STORAGE_KEY_MUADZIN;
+            else return [new Date(), new Date()]; 
 
+            const lastCompletedDateStr = localStorage.getItem(storageKey);
+            let baseDate = new Date(); 
 
-    // === FUNGSI UNTUK MERENDER DAFTAR NAMA ===
-    function renderLists() {
-        const indexKhotib = getCurrentRotationIndex('khotib');
-        const indexBilal = getCurrentRotationIndex('bilal');
-        const indexMuadzin = getCurrentRotationIndex('muadzin');
-        
-        const lists = [
-            { id: 'khotibList', data: khotib, startIndex: indexKhotib },
-            { id: 'bilalList', data: bilal, startIndex: indexBilal },
-            { id: 'muadzinList', data: muadzin, startIndex: indexMuadzin }
-        ];
+            if (lastCompletedDateStr) {
+                baseDate = new Date(lastCompletedDateStr);
+                baseDate.setDate(baseDate.getDate() + 1); 
+            }
 
-        lists.forEach(item => {
-            const ul = document.getElementById(item.id);
-            if (!ul) return; 
-            ul.innerHTML = ''; 
+            const day = baseDate.getDay(); 
+            let diffToFriday = (5 - day + 7) % 7;
+            
+            let fridayThis = new Date(baseDate);
+            fridayThis.setDate(baseDate.getDate() + diffToFriday);
+            fridayThis.setHours(11, 59, 0, 0); 
 
-            const scheduledIndex = item.startIndex % item.data.length;
-            
-            // Circular shift untuk menampilkan urutan yang dimulai dari petugas saat ini
-            const chronologicalRotation = [
-                ...item.data.slice(scheduledIndex),
-                ...item.data.slice(0, scheduledIndex)
-            ];
-            
-            chronologicalRotation.forEach((name, index) => {
-                const li = document.createElement('li');
-                const nameSpan = document.createElement('span');
-                nameSpan.classList.add('list-name');
-                nameSpan.innerText = `${index + 1}. ${name}`; 
-                li.appendChild(nameSpan);
-                ul.appendChild(li);
-            });
-        });
-    }
+            const fridayNext = new Date(fridayThis);
+            fridayNext.setDate(fridayThis.getDate() + 7);
+            
+            return [fridayThis, fridayNext];
+        }
+
+        function getIndexForFriday(date) {
+            const base = new Date(2025, 4, 9, 11, 59); // Tanggal dasar rotasi tetap (9 Mei 2025)
+            const diff = date - base;
+            return Math.floor(diff / (7 * 24 * 60 * 60 * 1000));
+        }
 
 
-    // === 2. Fungsi Pembuka Modal Pilihan Nama ===
-    function showNameSelection(role) {
-        let arrayToUse;
-        if (role === 'khotib') arrayToUse = khotib;
-        else if (role === 'bilal') arrayToUse = bilal;
-        else if (role === 'muadzin') arrayToUse = muadzin;
-        else return;
+        // === FUNGSI UNTUK MERENDER DAFTAR NAMA (HANYA NAMA) ===
+        function renderLists() {
+            // Hitung indeks dasar untuk setiap peran secara independen
+            const [thisFriKhotib] = getScheduleDates('khotib');
+            const [thisFriBilal] = getScheduleDates('bilal');
+            const [thisFriMuadzin] = getScheduleDates('muadzin');
 
-        const roleName = role.charAt(0).toUpperCase() + role.slice(1);
-        const currentIndex = getCurrentRotationIndex(role) % arrayToUse.length;
-        const scheduledPerson = arrayToUse[currentIndex];
-        
-        const modalHeader = document.getElementById('modalHeader');
-        const modalList = document.getElementById('modalList');
-        
-        modalHeader.innerText = `Pilih ${roleName} Pengganti (S) untuk ${scheduledPerson}`;
-        modalList.innerHTML = ''; 
+            const baseIndexKhotib = getIndexForFriday(thisFriKhotib);
+            const baseIndexBilal = getIndexForFriday(thisFriBilal);
+            const baseIndexMuadzin = getIndexForFriday(thisFriMuadzin);
 
-        arrayToUse.forEach(name => {
-            if (name !== scheduledPerson) { 
-                const button = document.createElement('button');
-                button.innerText = name;
-                button.setAttribute('onclick', `handleSubstituteSelection('${role}', '${name}')`);
-                modalList.appendChild(button);
-            }
-        });
+            const lists = [
+                { id: 'khotibList', data: khotib, startIndex: baseIndexKhotib },
+                { id: 'bilalList', data: bilal, startIndex: baseIndexBilal },
+                { id: 'muadzinList', data: muadzin, startIndex: baseIndexMuadzin }
+            ];
 
-        document.getElementById('substituteModal').classList.add('show-modal');
-    }
+            lists.forEach(item => {
+                const ul = document.getElementById(item.id);
+                if (!ul) return; 
+                
+                ul.innerHTML = ''; 
 
-    // === 3. Fungsi Inti: Handle Pilihan dan Geser Nama (LOGIKA BARU) ===
-    function handleSubstituteSelection(role, substituteName) {
-        document.getElementById('substituteModal').classList.remove('show-modal');
-
-        let arrayToModify;
-        let storageKeyData;
-        
-        if (role === 'khotib') { arrayToModify = khotib; storageKeyData = STORAGE_KEY_DATA_KHOTIB; }
-        else if (role === 'bilal') { arrayToModify = bilal; storageKeyData = STORAGE_KEY_DATA_BILAL; }
-        else if (role === 'muadzin') { arrayToModify = muadzin; storageKeyData = STORAGE_KEY_DATA_MUADZIN; }
-        else return;
-
-        const roleName = role.charAt(0).toUpperCase() + role.slice(1);
-        const substituteIndex = arrayToModify.indexOf(substituteName);
-
-        const currentIndex = getCurrentRotationIndex(role) % arrayToModify.length;
-        const scheduledPerson = arrayToModify[currentIndex];
-
-        if (!confirm(`Yakin menggeser ${roleName} PENGGANTI: **${substituteName}** ke urutan paling belakang? \n\nRotasi akan berubah: ${scheduledPerson} tetap di jadwal JUMAT INI, dan ${substituteName} pindah ke urutan terakhir.`)) {
-            return;
-        }
-
-        // LOGIKA GESER (memindahkan nama ke belakang)
-        const [removed] = arrayToModify.splice(substituteIndex, 1); 
-        arrayToModify.push(removed);
-
-        localStorage.setItem(storageKeyData, JSON.stringify(arrayToModify));
-        
-        updateSchedule(); 
-        
-        alert(`✅ ${roleName} ${substituteName} telah berhasil digeser ke urutan terakhir. Rotasi ${roleName} minggu depan akan menggunakan urutan baru.`);
-    }
-
-    // === 4. FUNGSI KONFIRMASI JADWAL SELESAI (Per Kolom) (LOGIKA BARU) ===
-    function confirmScheduleComplete(role) {
-        const roleName = role.charAt(0).toUpperCase() + role.slice(1);
-        let storageKeyIndex;
-        let arrayToUse;
-        
-        if (role === 'khotib') { storageKeyIndex = STORAGE_KEY_INDEX_KHOTIB; arrayToUse = khotib; }
-        else if (role === 'bilal') { storageKeyIndex = STORAGE_KEY_INDEX_BILAL; arrayToUse = bilal; }
-        else if (role === 'muadzin') { storageKeyIndex = STORAGE_KEY_INDEX_MUADZIN; arrayToUse = muadzin; }
-        else return;
-
-        let currentIndex = getCurrentRotationIndex(role);
-        const scheduledPerson = arrayToUse[currentIndex % arrayToUse.length];
-
-        if (!confirm(`Konfirmasi tugas **${roleName}** sudah SELESAI? \n\nPetugas ${roleName} saat ini: **${scheduledPerson}**. \nMengklik OK akan memajukan rotasi ${roleName} ke orang berikutnya.`)) {
-            return;
-        }
-        
-        // Majukan Indeks Rotasi
-        const newIndex = currentIndex + 1;
-        localStorage.setItem(storageKeyIndex, newIndex);
-
-        updateSchedule();
-        alert(`✅ Jadwal **${roleName}** sukses dimajukan! Petugas berikutnya sudah ditampilkan.`);
-    }
-
-    // --- Fungsi Update Waktu ---
-    function updateClock() {
-        const now = new Date();
-        const waktu = now.toLocaleTimeString('id-ID');
-        const tanggal = now.toLocaleDateString('id-ID', {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
-        document.getElementById("clock").innerText = `${tanggal} - ${waktu}`;
-    }
-
-    // --- 6. Fungsi Update Utama ---
-    function updateSchedule() {
-        updateClock();
-        renderLists(); 
-        
-        // Ambil Indeks Rotasi untuk Tampilan 'JUMAT INI'
-        const indexThisKhotib = getCurrentRotationIndex('khotib');
-        const indexThisBilal = getCurrentRotationIndex('bilal');
-        const indexThisMuadzin = getCurrentRotationIndex('muadzin');
-
-        // Ambil Indeks Rotasi untuk Tampilan 'JUMAT AKAN DATANG' (Indeks saat ini + 1)
-        const indexNextKhotib = indexThisKhotib + 1;
-        const indexNextBilal = indexThisBilal + 1;
-        const indexNextMuadzin = indexThisMuadzin + 1;
+                const scheduledIndex = item.startIndex % item.data.length;
+                
+                // 1. Buat array baru yang diurutkan secara kronologis (Circular shift)
+                const chronologicalRotation = [];
+                
+                for (let i = scheduledIndex; i < item.data.length; i++) {
+                    chronologicalRotation.push(item.data[i]);
+                }
+                for (let i = 0; i < scheduledIndex; i++) {
+                    chronologicalRotation.push(item.data[i]);
+                }
+                
+                // 2. Tampilkan array yang sudah diurutkan (chronologicalRotation)
+                chronologicalRotation.forEach((name, index) => {
+                    const li = document.createElement('li');
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.classList.add('list-name');
+                    // Hanya menampilkan nomor urut dan nama
+                    nameSpan.innerText = `${index + 1}. ${name}`; 
+                    
+                    li.appendChild(nameSpan);
+                    ul.appendChild(li);
+                });
+            });
+        }
 
 
-        // --- TAMPILAN NAMA UTAMA (JUMAT INI) ---
-        document.getElementById("khotibThis").innerText = khotib[indexThisKhotib % khotib.length];
-        document.getElementById("bilalThis").innerText = bilal[indexThisBilal % bilal.length];
-        document.getElementById("muadzinThis").innerText = muadzin[indexThisMuadzin % muadzin.length];
+        // === 2. Fungsi Pembuka Modal Pilihan Nama ===
+        function showNameSelection(role) {
+            let arrayToUse;
+            if (role === 'khotib') arrayToUse = khotib;
+            else if (role === 'bilal') arrayToUse = bilal;
+            else if (role === 'muadzin') arrayToUse = muadzin;
+            else return;
 
-        // --- TAMPILAN NAMA UTAMA (JUMAT AKAN DATANG) ---
-        document.getElementById("khotibNext").innerText = khotib[indexNextKhotib % khotib.length];
-        document.getElementById("bilalNext").innerText = bilal[indexNextBilal % bilal.length];
-        document.getElementById("muadzinNext").innerText = muadzin[indexNextMuadzin % muadzin.length];
-    }
+            const roleName = role.charAt(0).toUpperCase() + role.slice(1);
+            
+            // Mengambil tanggal spesifik untuk peran ini
+            const [thisFri] = getScheduleDates(role); 
+            const baseIndexThis = getIndexForFriday(thisFri);
+            const currentIndex = baseIndexThis % arrayToUse.length;
+            const scheduledPerson = arrayToUse[currentIndex];
+            
+            const modalHeader = document.getElementById('modalHeader');
+            const modalList = document.getElementById('modalList');
+            
+            modalHeader.innerText = `Pilih ${roleName} Pengganti (S) untuk ${scheduledPerson}`;
+            modalList.innerHTML = ''; 
 
-    // Mulai update setiap detik
-    setInterval(updateSchedule, 1000);
-    updateSchedule(); 
-</script>
+            arrayToUse.forEach(name => {
+                if (name !== scheduledPerson) { 
+                    const button = document.createElement('button');
+                    button.innerText = name;
+                    button.setAttribute('onclick', `handleSubstituteSelection('${role}', '${name}')`);
+                    modalList.appendChild(button);
+                }
+            });
+
+            document.getElementById('substituteModal').classList.add('show-modal');
+        }
+
+        // === 3. Fungsi Inti: Handle Pilihan dan Geser Nama ===
+        function handleSubstituteSelection(role, substituteName) {
+            document.getElementById('substituteModal').classList.remove('show-modal');
+
+            let arrayToModify;
+            if (role === 'khotib') arrayToModify = khotib;
+            else if (role === 'bilal') arrayToModify = bilal;
+            else if (role === 'muadzin') arrayToModify = muadzin;
+            else return;
+
+            const roleName = role.charAt(0).toUpperCase() + role.slice(1);
+            const substituteIndex = arrayToModify.indexOf(substituteName);
+
+            const [thisFri] = getScheduleDates(role);
+            const baseIndexThis = getIndexForFriday(thisFri);
+            const currentIndex = baseIndexThis % arrayToModify.length;
+            const scheduledPerson = arrayToModify[currentIndex];
+
+
+            if (!confirm(`Yakin menggeser ${roleName} PENGGANTI: **${substituteName}** ke urutan paling belakang? \n\nRotasi akan berubah: ${scheduledPerson} tetap di jadwal JUMAT INI, dan ${substituteName} pindah ke urutan terakhir.`)) {
+                return;
+            }
+
+            const [removed] = arrayToModify.splice(substituteIndex, 1); 
+            arrayToModify.push(removed);
+
+            localStorage.setItem(`data_${role}`, JSON.stringify(arrayToModify));
+            
+            updateSchedule(); 
+            
+            alert(`✅ ${roleName} ${substituteName} telah berhasil digeser ke urutan terakhir. Rotasi ${roleName} minggu depan akan menggunakan urutan baru.`);
+        }
+
+        // === 4. FUNGSI KONFIRMASI JADWAL SELESAI (Manual Advance Per Role) ===
+        function confirmScheduleComplete(role) {
+            let storageKey;
+            const roleName = role.charAt(0).toUpperCase() + role.slice(1);
+
+            if (role === 'khotib') storageKey = STORAGE_KEY_KHOTIB;
+            else if (role === 'bilal') storageKey = STORAGE_KEY_BILAL;
+            else if (role === 'muadzin') storageKey = STORAGE_KEY_MUADZIN;
+            else return;
+
+            const [thisFri] = getScheduleDates(role); // Menggunakan fungsi baru untuk mendapatkan tanggal Jumat yang dikonfirmasi
+            const dateString = thisFri.toISOString();
+            
+            if (!confirm(`Konfirmasi: Apakah tugas ${roleName} untuk Jumat ini sudah SELESAI? \n\nMengklik OK akan memajukan jadwal ${roleName} ke Minggu Berikutnya.`)) {
+                return;
+            }
+
+            localStorage.setItem(storageKey, dateString); // Menyimpan per role
+            updateSchedule(); // Update seluruh tampilan
+            alert(`Jadwal ${roleName} sukses dimajukan! Petugas berikutnya sudah ditampilkan.`);
+        }
+
+
+        // --- 6. Fungsi Update Utama ---
+        function updateClock() {
+            const now = new Date();
+            const waktu = now.toLocaleTimeString('id-ID');
+            const tanggal = now.toLocaleDateString('id-ID', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+            document.getElementById("clock").innerText = `${tanggal} - ${waktu}`;
+        }
+
+        function updateSchedule() {
+            updateClock();
+            renderLists(); 
+
+            // Hitung jadwal untuk KHOTIB
+            const [thisFriKhotib, nextFriKhotib] = getScheduleDates('khotib');
+            const indexThisKhotib = getIndexForFriday(thisFriKhotib);
+            const indexNextKhotib = getIndexForFriday(nextFriKhotib);
+
+            // Hitung jadwal untuk BILAL
+            const [thisFriBilal, nextFriBilal] = getScheduleDates('bilal');
+            const indexThisBilal = getIndexForFriday(thisFriBilal);
+            const indexNextBilal = getIndexForFriday(nextFriBilal);
+
+            // Hitung jadwal untuk MUADZIN
+            const [thisFriMuadzin, nextFriMuadzin] = getScheduleDates('muadzin');
+            const indexThisMuadzin = getIndexForFriday(thisFriMuadzin);
+            const indexNextMuadzin = getIndexForFriday(nextFriMuadzin);
+
+            // --- TAMPILAN NAMA UTAMA (Jumat Ini) ---
+            document.getElementById("khotibThis").innerText = khotib[indexThisKhotib % khotib.length];
+            document.getElementById("bilalThis").innerText = bilal[indexThisBilal % bilal.length];
+            document.getElementById("muadzinThis").innerText = muadzin[indexThisMuadzin % muadzin.length];
+
+            // --- TAMPILAN NAMA UTAMA (Jumat Akan Datang) ---
+            document.getElementById("khotibNext").innerText = khotib[indexNextKhotib % khotib.length];
+            document.getElementById("bilalNext").innerText = bilal[indexNextBilal % bilal.length];
+            document.getElementById("muadzinNext").innerText = muadzin[indexNextMuadzin % muadzin.length];
+        }
+
+        setInterval(updateSchedule, 1000);
+        updateSchedule(); 
+    </script>
 </body>
 </html>
